@@ -15,8 +15,10 @@ public class Tile extends StackPane
     public Tile(boolean colorBool)
     {
         //true = white tile, false = black tile.
+        System.out.println("colorBool = " + colorBool);
         Color color = colorBool ? Color.WHITE : Color.BLACK;
         tileBackground.setFill(color);
+        getChildren().add(tileBackground);
 
     }
 
