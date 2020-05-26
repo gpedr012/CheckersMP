@@ -1,7 +1,6 @@
-package sample;
+package ui;
 
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
 
 
 public class Board extends GridPane
@@ -25,8 +24,9 @@ public class Board extends GridPane
         {
             for (int j = 0; j < tiles[0].length ; j++)
             {
-                tiles[i][j] = new Tile(currentColor);
-                add(tiles[i][j], i, j);
+                Tile tile = new Tile(currentColor);
+                tiles[i][j] = tile;
+                add(tile, i, j);
                 currentColor = !currentColor;
 
             }
