@@ -2,5 +2,8 @@ module CheckersMP {
     requires javafx.fxml;
     requires javafx.controls;
 
-    opens sample;
+    opens checkers.player;
+    opens checkers.ui;
+    opens checkers;
+
 }
