@@ -9,9 +9,17 @@ public interface Player
 
     void addPiece(Piece piece);
 
-    List<Piece> getPiecesWithMoves(List<Piece> ownedPieces);
+    List<Piece> getPiecesWithMoves();
 
     boolean hasPiecesLeft();
+
+    int getPlayerNumber();
+
+    Piece.PieceColor getPlayerColor();
+
+
+
+
 
 
 

@@ -1,10 +1,13 @@
 package checkers.ui;
 
 import checkers.player.Player;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 
+import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 //TODO: Setup changes depending on whether 1 player plays or two.
 //If one player, always put player's pieces at the bottom of the board.
@@ -12,73 +15,76 @@ import java.util.List;
 
 public class Board extends GridPane
 {
-    private final int NUM_ROWS = 8, NUM_COLS = 8, NUM_DARK_TILES = 32;
+    private final int NUM_ROWS = 8, NUM_COLS = 8, NUM_DARK_TILES = 32, NUM_DARK_TILES_PER_ROW = 4;
 
-    private List<Tile> darkTiles = new ArrayList<>(NUM_DARK_TILES);
+    private List<List<Tile>> darkTiles = new ArrayList<List<Tile>>(NUM_DARK_TILES);
 
 
-    public Board()
+    public Board(Player playerOne, Player playerTwo)
     {
         initTiles();
-        initPieces(null, null);
+        initPieces(playerOne);
+        initPieces(playerTwo);
+
+
 
     }
+
 
     private void initTiles()
     {
         //this boolean helps switch between the colors since they alternate between rows and cols.
         boolean colorAlternator = true;
+        //The piece that is on the edge alternates from being first to last on each row.
+        //true = 1st tile is edge, false = last tile is edge.
+        boolean edgeAlternator = false;
+        int darkTileCounter = -1;
 
         for (int i = 0; i < NUM_ROWS; i++)
         {
+            darkTiles.add(new ArrayList<>(NUM_DARK_TILES_PER_ROW));
+
             for (int j = 0; j < NUM_COLS ; j++)
             {
                 Tile tile = colorAlternator ? Tile.createLightTile() : Tile.createDarkTile();
                 add(tile, j, i);
                 if(!colorAlternator)
                 {
-                    darkTiles.add(tile);
+                    darkTiles.get(i).add(tile);
+
 
                 }
 
                 colorAlternator = !colorAlternator;
             }
 
+            if (edgeAlternator)
+            {
+                darkTiles.get(i).get(0).setEdge(true);
+            } else
+            {
+                darkTiles.get(i).get(NUM_DARK_TILES_PER_ROW - 1).setEdge(true);
+            }
+            edgeAlternator = !edgeAlternator;
             colorAlternator = !colorAlternator;
         }
     }
 
 
-    private void initPieces(Player playerOne, Player playerTwo)
+    private void initPieces(Player player)
     {
-        //when it loops once change alignment so that the other pieces are placed by the bottom
-        //and the two middle rows are skipped as is usual with checkers setup, so alignment becomes +8.
-        int alignment = 0;
-        boolean colorAlternator = true;
+        int startingRow = player.getPlayerNumber() == 1 ? NUM_ROWS - 3 : 0;
 
-
-        //loop twice to place each of the 12 player's pieces.
-        for (int i = 0; i < 2; i++)
+        for (int i = startingRow; i < startingRow + 3; i++)
         {
-            for (int j = 0; j < 12; j++)
+            for (int j = 0; j < darkTiles.get(i).size(); j++)
             {
-                Piece piece = colorAlternator ? Piece.createLightPiece() : Piece.createDarkPiece();
-                darkTiles.get(j + alignment).getChildren().add(piece);
-
+                darkTiles.get(i).get(j).getChildren().add(new Piece(player.getPlayerColor(), i, j));
             }
-            alignment += 4 * 5; //skip 5 rows (each has 4 dark tiles).
-            colorAlternator =  !colorAlternator;
-
         }
-
-//        int count = 0;
-//        for (components.Tile tile: darkTiles
-//             )
-//        {
-//            tile.getChildren().add(new Label(Integer.toString(count)));
-//            count++;
-//        }
 
 
     }
+
+
 }

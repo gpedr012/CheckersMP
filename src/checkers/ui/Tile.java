@@ -11,6 +11,7 @@ public class Tile extends StackPane
     private Rectangle tileBackground = new Rectangle(sideLength, sideLength);
     private boolean containsPiece = false;
     private Piece piece = null;
+    private boolean isEdge;
 
     private static final Color LIGHT_COLOR = Color.SANDYBROWN;
     private static final Color DARK_COLOR = Color.SADDLEBROWN;
@@ -27,6 +28,8 @@ public class Tile extends StackPane
 
     public static Tile createLightTile() { return new Tile(LIGHT_COLOR); }
     public static Tile createDarkTile() { return new Tile(DARK_COLOR); }
+
+
 
     public boolean containsPiece()
     {
@@ -45,5 +48,15 @@ public class Tile extends StackPane
         getChildren().remove(piece);
         containsPiece = false;
         piece = null;
+    }
+
+    public boolean isEdge()
+    {
+        return isEdge;
+    }
+
+    public void setEdge(boolean edge)
+    {
+        isEdge = edge;
     }
 }

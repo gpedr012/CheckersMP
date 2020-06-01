@@ -11,32 +11,49 @@ import java.util.Stack;
 
 public class Piece extends StackPane
 {
+
+    public enum PieceColor
+    {
+
+        LIGHT(Color.web("#ff0000"), Color.web("#c90000")), DARK(Color.web("#2e2e2e"), Color.web("#141414"));
+
+        private Color innerColor, outerColor;
+        PieceColor(Color outerColor, Color innerColor)
+        {
+            this.outerColor = outerColor;
+            this.innerColor = innerColor;
+
+        }
+
+        public Color getOuterColor()
+        {
+            return outerColor;
+        }
+
+        public Color getInnerColor()
+        {
+            return innerColor;
+        }
+    }
+
     private Circle outerCircle = new Circle(30);
     private Circle innerCircle = new Circle (28);
     private Image crownImage = new Image(getClass().getResourceAsStream("/crown.png"));
     private ImageView crownIView = new ImageView(crownImage);
     private List<Integer> possibleMoves = new Stack<>();
+    private int row = -1, col = -1;
+
 
     private boolean crowned = false;
 
-    private static final Color DARK_OUTER = Color.web("#2e2e2e");
-    private static final Color DARK_INNER = Color.web("#141414");
-
-    private static final Color LIGHT_OUTER = Color.web("#ff0000");
-    private static final Color LIGHT_INNER = Color.web("#c90000");
-
-
-
-    public Piece(Color colorOuter, Color colorInner)
+    public Piece(PieceColor color, int row, int col)
     {
         initGraphics();
-        initColor(colorOuter, colorInner);
+        initColor(color);
         getChildren().addAll(outerCircle, innerCircle);
 
     }
 
-    public static Piece createLightPiece() { return new Piece(LIGHT_OUTER, LIGHT_INNER); }
-    public static Piece createDarkPiece() { return new Piece(DARK_OUTER, DARK_INNER); }
 
     private void initGraphics()
     {
@@ -47,15 +64,22 @@ public class Piece extends StackPane
         innerCircle.setStrokeWidth(6);
     }
 
-    private void initColor(Color colorOuter, Color colorInner)
+    private void initColor(PieceColor color)
     {
-        //true = light piece, false = dark piece.
+        outerCircle.setFill(color.getOuterColor());
+        innerCircle.setStroke(color.getInnerColor());
 
-        outerCircle.setFill(colorOuter);
-        innerCircle.setStroke(colorInner);
+    }
 
+    public void addMove(int position)
+    {
+        possibleMoves.add(position);
 
+    }
 
+    public boolean hasAnyMoves()
+    {
+        return possibleMoves.isEmpty();
     }
 
     public boolean isCrowned()
@@ -69,6 +93,19 @@ public class Piece extends StackPane
         getChildren().add(crownIView);
     }
 
+    public void setPosition(int row, int col)
+    {
+        this.row = row;
+        this.col = col;
+    }
 
+    public int getRow()
+    {
+        return row;
+    }
 
+    public int getCol()
+    {
+        return col;
+    }
 }
