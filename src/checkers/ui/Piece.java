@@ -1,5 +1,6 @@
 package checkers.ui;
 
+import checkers.player.MoveList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -34,13 +35,16 @@ public class Piece extends StackPane
         {
             return innerColor;
         }
+
+
     }
 
     private Circle outerCircle = new Circle(30);
     private Circle innerCircle = new Circle (28);
     private Image crownImage = new Image(getClass().getResourceAsStream("/crown.png"));
     private ImageView crownIView = new ImageView(crownImage);
-    private List<Integer> possibleMoves = new Stack<>();
+    private MoveList possibleMoves;
+    private PieceColor color;
     private int row = -1, col = -1;
 
 
@@ -50,10 +54,15 @@ public class Piece extends StackPane
     {
         initGraphics();
         initColor(color);
+        this.color = color;
         getChildren().addAll(outerCircle, innerCircle);
 
     }
 
+    public PieceColor getColor()
+    {
+        return color;
+    }
 
     private void initGraphics()
     {
@@ -71,14 +80,19 @@ public class Piece extends StackPane
 
     }
 
-    public void addMove(int position)
+    public MoveList getPossibleMoves()
     {
-        possibleMoves.add(position);
+        return possibleMoves;
+    }
 
+    public void setPossibleMoves(MoveList possibleMoves)
+    {
+        this.possibleMoves = possibleMoves;
     }
 
     public boolean hasAnyMoves()
     {
+
         return possibleMoves.isEmpty();
     }
 
