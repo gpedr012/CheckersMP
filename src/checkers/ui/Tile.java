@@ -1,19 +1,24 @@
 package checkers.ui;
 
+import javafx.animation.FadeTransition;
+import javafx.animation.Timeline;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 public class Tile extends StackPane
 {
     private final int sideLength = 80;
+    private final int highlightModifier = 5;
 
     private Rectangle tileBackground = new Rectangle(sideLength, sideLength);
+    private Rectangle highLight = new Rectangle(sideLength - highlightModifier, sideLength - highlightModifier);
     private boolean containsPiece = false;
     private Piece piece = null;
     private boolean isEdge;
     private final Color color;
-
+    private FadeTransition highLightAnimation;
 
 
     public static final Color LIGHT_COLOR = Color.SANDYBROWN;
@@ -25,9 +30,32 @@ public class Tile extends StackPane
         //true = light tile, false = dark tile.
         this.color = color;
         tileBackground.setFill(color);
-        getChildren().add(tileBackground);
+        initHighLight();
+        initAnim();
+
+        getChildren().addAll(tileBackground, highLight);
 
     }
+
+    private void initHighLight()
+    {
+        highLight.setFill(null);
+        highLight.setStroke(Color.GOLD);
+        highLight.setStrokeWidth(highlightModifier);
+        highLight.setVisible(false);
+
+    }
+
+    private void initAnim()
+    {
+        highLightAnimation = new FadeTransition(Duration.seconds(2), highLight);
+        highLightAnimation.setToValue(0.2);
+        highLightAnimation.setCycleCount(Timeline.INDEFINITE);
+        highLightAnimation.setAutoReverse(true);
+
+
+    }
+
 
     public static Tile createLightTile()
     {
@@ -80,6 +108,20 @@ public class Tile extends StackPane
     public void setEdge(boolean edge)
     {
         isEdge = edge;
+
+    }
+
+    public void highlightTile(boolean value)
+    {
+        highLight.setVisible(value);
+        if(value)
+        {
+            highLightAnimation.play();
+        }
+        else
+        {
+            highLightAnimation.stop();
+        }
 
     }
 
