@@ -120,6 +120,7 @@ public class Tile extends StackPane
         }
         else
         {
+            highLightAnimation.jumpTo(Duration.ZERO);
             highLightAnimation.stop();
         }
 

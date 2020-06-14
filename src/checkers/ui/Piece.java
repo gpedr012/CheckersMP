@@ -167,6 +167,7 @@ public class Piece extends StackPane
         }
         else
         {
+            selectionAnimation.jumpTo(Duration.ZERO);
             selectionAnimation.stop();
         }
     }
