@@ -17,13 +17,17 @@ public class Board extends GridPane
     private List<List<Tile>> tiles = new ArrayList<List<Tile>>(NUM_ROWS * NUM_COLS);
 
 
+    public Board()
+    {
+        initTiles();
+    }
+
     public Board(Player playerOne, Player playerTwo)
     {
         initTiles();
-        addPiecesToPlayer(playerOne);
-        addPiecesToPlayer(playerTwo);
+        addPiecesToBoard(playerOne);
+        addPiecesToBoard(playerTwo);
     }
-
 
 
     private void initTiles()
@@ -36,7 +40,7 @@ public class Board extends GridPane
         {
             tiles.add(new ArrayList<>(NUM_COLS));
 
-            for (int j = 0; j < NUM_COLS ; j++)
+            for (int j = 0; j < NUM_COLS; j++)
             {
                 Tile tile = colorAlternator ? Tile.createLightTile() : Tile.createDarkTile();
                 add(tile, j, i);
@@ -49,20 +53,23 @@ public class Board extends GridPane
     }
 
 
-
-    public void addPiecesToPlayer(Player player)
+    public void addPiecesToBoard(Player player)
     {
         int startingRow = player.getPlayerNumber() == 1 ? NUM_ROWS - 3 : 0;
+        int pieceCounter = 0;
 
         for (int i = startingRow; i < startingRow + 3; i++)
         {
             for (int j = 0; j < tiles.get(i).size(); j++)
             {
-                if(tiles.get(i).get(j).getColor() == Tile.DARK_COLOR)
+                if (tiles.get(i).get(j).getColor() == Tile.DARK_COLOR)
                 {
-                    Piece piece = new Piece(player.getPlayerColor(), i, j);
-                    player.addPiece(piece);
+                    Piece piece = player.getPiece(pieceCounter);
                     tiles.get(i).get(j).addPiece(piece);
+                    piece.setRow(i);
+                    piece.setCol(j);
+                    pieceCounter++;
+
                 }
 
             }

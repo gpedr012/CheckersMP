@@ -10,17 +10,21 @@ import java.util.List;
 public abstract class Player
 {
 
-    List<Piece> piecesList;
-    final Piece.PieceColor playerColor;
-    final int playerNumber;
-    BooleanProperty hasTurn = new SimpleBooleanProperty(false);
+    private List<Piece> piecesList;
+    private final Piece.PieceColor playerColor;
+    private final int playerNumber;
+    private BooleanProperty hasTurn = new SimpleBooleanProperty(false);
 
-    public Player(List<Piece> piecesList, int playerNumber)
+
+    public Player(Piece.PieceColor playerColor, int playerNumber)
     {
-        playerColor = piecesList.get(0).getColor();
+        this.playerColor = playerColor;
         this.playerNumber = playerNumber;
-        this.piecesList = piecesList;
+        piecesList = new ArrayList<>(12);
+        initPieces();
     }
+
+
 
     public void addPiece(Piece piece)
     {
@@ -40,6 +44,8 @@ public abstract class Player
 
         return piecesWithMoves;
     }
+
+    public abstract void processTurn();
 
     public boolean hasPiecesLeft()
     {
@@ -69,6 +75,25 @@ public abstract class Player
     public void setHasTurn(boolean hasTurn)
     {
         this.hasTurn.set(hasTurn);
+    }
+
+    private void initPieces()
+    {
+        final int MAX_PIECES = 12;
+        for (int i = 0; i < MAX_PIECES; i++)
+        {
+            this.addPiece(new Piece(this.playerColor));
+        }
+    }
+
+    protected List<Piece> getPiecesList()
+    {
+        return piecesList;
+    }
+
+    public Piece getPiece(int index)
+    {
+        return piecesList.get(index);
     }
 
 
