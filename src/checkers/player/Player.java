@@ -1,8 +1,15 @@
 package checkers.player;
 
+import checkers.ui.Board;
 import checkers.ui.Piece;
+import checkers.ui.Tile;
+import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Bounds;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,18 +17,24 @@ import java.util.List;
 public abstract class Player
 {
 
-    private List<Piece> piecesList;
+
     private final Piece.PieceColor playerColor;
     private final int playerNumber;
     private BooleanProperty hasTurn = new SimpleBooleanProperty(false);
+    protected ObjectProperty<Piece> selectedPiece = new SimpleObjectProperty<>();
+    protected List<Piece> piecesList;
+    private Board board;
 
 
-    public Player(Piece.PieceColor playerColor, int playerNumber)
+    public Player(Piece.PieceColor playerColor, int playerNumber, Board board)
     {
         this.playerColor = playerColor;
         this.playerNumber = playerNumber;
+        this.board = board;
+
         piecesList = new ArrayList<>(12);
         initPieces();
+        board.addPiecesToBoard(this);
     }
 
 
@@ -46,6 +59,11 @@ public abstract class Player
     }
 
     public abstract void processTurn();
+
+    public void endTurn()
+    {
+        hasTurn.set(false);
+    }
 
     public boolean hasPiecesLeft()
     {
@@ -86,14 +104,53 @@ public abstract class Player
         }
     }
 
-    protected List<Piece> getPiecesList()
-    {
-        return piecesList;
-    }
 
     public Piece getPiece(int index)
     {
         return piecesList.get(index);
+    }
+
+    protected void playMovementAnimation(Tile currentTile, Tile destinationTile)
+    {
+        Piece piece = currentTile.getPiece();
+
+        Bounds currentPosition = currentTile.localToScene(currentTile.getBoundsInLocal());
+        Bounds destinationPosition = destinationTile.localToScene(destinationTile.getBoundsInLocal());
+
+        TranslateTransition animation = createTranslateTransition(piece, currentPosition, destinationPosition);
+        currentTile.removePiece();
+        board.getChildren().add(piece);
+        animation.setOnFinished(e -> { finishAnimation(piece, destinationTile);});
+        animation.play();
+
+
+
+    }
+
+    private void finishAnimation(Piece piece, Tile destination)
+    {
+
+        System.out.println("destination.containsPiece() = " + destination.containsPiece());
+        destination.addPiece(piece);
+        System.out.println("destination.containsPiece() = " + destination.containsPiece());
+        endTurn();
+
+    }
+
+    private TranslateTransition createTranslateTransition(Piece pieceToAnimate, Bounds currentPosition, Bounds destinationPosition)
+    {
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pieceToAnimate);
+        double offset = Tile.SIDE_LENGTH / 2d;
+
+        transition.setCycleCount(1);
+        transition.setFromX(currentPosition.getCenterX() - offset);
+        transition.setFromY(currentPosition.getCenterY() - offset);
+
+        transition.setToX(destinationPosition.getCenterX() - offset);
+        transition.setToY(destinationPosition.getCenterY() - offset);
+
+        return transition;
+
     }
 
 
