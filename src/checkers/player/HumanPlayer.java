@@ -3,14 +3,23 @@ package checkers.player;
 import checkers.ui.Board;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
+import javafx.animation.TranslateTransition;
+import javafx.beans.binding.ObjectBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
+import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.LineTo;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.util.Duration;
 
 import java.util.Iterator;
 
@@ -21,26 +30,64 @@ public class HumanPlayer extends Player
     private Piece.PieceColor playerColor;
     private Board board;
     private MoveCalculator moveCalculator;
-    private ObjectProperty<Piece> selectedPiece = new SimpleObjectProperty<>();
     private final Logic logic = new Logic();
 
 
-    public HumanPlayer(Piece.PieceColor playerColor, int playerNumber)
+    public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board)
     {
-        super(playerColor, playerNumber);
+        super(playerColor, playerNumber, board);
+        this.board = board;
         initLogic();
 
-
     }
+
+//    public void test()
+//    {
+//        Tile curTile = board.getTile(2,1);
+//        Tile newTile = board.getTile(3, 2);
+//
+//        double modifier = -40;
+//
+//        Bounds curB = curTile.localToScene(curTile.getBoundsInLocal());
+//        Bounds newB = newTile.localToScene(newTile.getBoundsInLocal());
+//
+//        System.out.println("curB.getCenterX() = " + curB.getCenterX());
+//        System.out.println("newB.getCenterX() = " + newB.getCenterX());
+//        System.out.println("curB.getCenterY() = " + curB.getCenterY());
+//        System.out.println("newB.getCenterY() = " + newB.getCenterY());
+//
+//        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1.5), curTile.getPiece());
+//        translateTransition.setToX(newB.getCenterX() + modifier);
+//        translateTransition.setFromX(curB.getCenterX() + modifier);
+//        translateTransition.setToY(newB.getCenterY() + modifier);
+//        translateTransition.setFromY(curB.getCenterY() + modifier);
+//        translateTransition.setAutoReverse(true);
+//        Piece piece = curTile.getPiece();
+//        curTile.removePiece();
+//        translateTransition.setCycleCount(Timeline.INDEFINITE);
+//        board.getChildren().add(piece);
+//        translateTransition.play();
+//
+//    }
 
     @Override
     public void processTurn()
     {
+        for (Piece piece : piecesList)
+        {
+            if(piece.hasAnyMoves())
+            {
+                piece.setHighLight(true, Color.WHITE);
+            }
+        }
+
 
     }
 
+
     private void initLogic()
     {
+
         selectedPiece.addListener(new ChangeListener<Piece>()
         {
             @Override
@@ -51,6 +98,7 @@ public class HumanPlayer extends Player
                     if(oldPiece.hasAnyMoves())
                     {
                         oldPiece.setHighLight(true, Color.WHITE);
+                        setHighLightTiles(false, oldPiece);
                     }
                     else
                     {
@@ -61,17 +109,28 @@ public class HumanPlayer extends Player
             }
         });
 
-        for (Piece piece : getPiecesList())
+        for (Piece piece : piecesList)
         {
-            if(piece.hasAnyMoves())
+            piece.onMouseClickedProperty().bind(new ObjectBinding<EventHandler<? super MouseEvent>>()
             {
-                piece.setHighLight(true, Color.WHITE);
-                System.out.println("HumanPlayer.initLogic");
-            }
-            piece.setOnMouseClicked(logic.getPieceLogic());
+                {
+                    super.bind(hasTurnProperty());
+                }
 
+                @Override
+                protected EventHandler<? super MouseEvent> computeValue()
+                {
+                    if(hasTurnProperty().get())
+                    {
+                        return logic.getPieceLogic();
+                    }
+                    else
+                    {
+                        return null;
+                    }
+                }
+            });
         }
-
 
     }
 
@@ -95,21 +154,6 @@ public class HumanPlayer extends Player
 
     }
 
-    public Piece getSelectedPiece()
-    {
-        return selectedPiece.get();
-    }
-
-    public ObjectProperty<Piece> selectedPieceProperty()
-    {
-        return selectedPiece;
-    }
-
-    public void setSelectedPiece(Piece selectedPiece)
-    {
-        this.selectedPiece.set(selectedPiece);
-    }
-
     private class Logic
     {
         EventHandler<MouseEvent> tileLogic;
@@ -123,10 +167,10 @@ public class HumanPlayer extends Player
                 public void handle(MouseEvent mouseEvent)
                 {
                     Piece currentPiece = selectedPiece.get();
+                    System.out.println(currentPiece.toString());
                     Tile currentTile = board.getTile(currentPiece.getRow(), currentPiece.getCol());
                     Tile newTile = (Tile)mouseEvent.getSource();
-                    currentTile.removePiece();
-                    newTile.addPiece(currentPiece);
+                    playMovementAnimation(currentTile, newTile);
 
 
                 }
