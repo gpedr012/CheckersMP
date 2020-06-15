@@ -9,11 +9,11 @@ import javafx.util.Duration;
 
 public class Tile extends StackPane
 {
-    private final int sideLength = 80;
+    public static final int SIDE_LENGTH = 80;
     private final int highlightModifier = 5;
 
-    private Rectangle tileBackground = new Rectangle(sideLength, sideLength);
-    private Rectangle highLight = new Rectangle(sideLength - highlightModifier, sideLength - highlightModifier);
+    private Rectangle tileBackground = new Rectangle(SIDE_LENGTH, SIDE_LENGTH);
+    private Rectangle highLight = new Rectangle(SIDE_LENGTH - highlightModifier, SIDE_LENGTH - highlightModifier);
     private boolean containsPiece = false;
     private Piece piece = null;
     private boolean isEdge;
@@ -35,6 +35,7 @@ public class Tile extends StackPane
 
         getChildren().addAll(tileBackground, highLight);
 
+
     }
 
     private void initHighLight()
@@ -48,7 +49,7 @@ public class Tile extends StackPane
 
     private void initAnim()
     {
-        highLightAnimation = new FadeTransition(Duration.seconds(2), highLight);
+        highLightAnimation = new FadeTransition(Duration.seconds(1.5), highLight);
         highLightAnimation.setToValue(0.2);
         highLightAnimation.setCycleCount(Timeline.INDEFINITE);
         highLightAnimation.setAutoReverse(true);
@@ -85,7 +86,7 @@ public class Tile extends StackPane
 
     public void addPiece(Piece piece)
     {
-        getChildren().add(piece);
+        getChildren().add(getChildren().size() - 1, piece);
         this.piece = piece;
         containsPiece = true;
 
