@@ -31,7 +31,9 @@ public class MoveCalculator
     {
         for(Piece piece: pieces)
         {
+            System.out.println(piece.toString());
             piece.setPossibleMoves(getMoves(piece));
+
         }
     }
 
@@ -73,6 +75,7 @@ public class MoveCalculator
         {
             Move possibleMove = new Move(rowToCheck, currentCol + 1);
             possibleMove.assignType(rowModifier, 1);
+            moveTypeStack.push(possibleMove);
 
 
         }
@@ -80,6 +83,7 @@ public class MoveCalculator
         {
             Move possibleMove = new Move(rowToCheck, currentCol - 1);
             possibleMove.assignType(rowModifier, -1);
+            moveTypeStack.push(possibleMove);
         }
 
         return processMoves(moveTypeStack);
@@ -90,17 +94,17 @@ public class MoveCalculator
     {
         MoveList moveList = new MoveList();
 
+
         for (Move move : moveTypeStack
         )
         {
             switch (move.getType())
             {
                 case REQUIRED:
-                    moveList.clear();
-                    moveList.addMove(move.getTile());
+                    moveList.addMove(move.getTile(), MoveList.MovePriority.REQUIRED);
                     return moveList;
                 case OPTIONAL:
-                    moveList.addMove(move.getTile());
+                    moveList.addMove(move.getTile(), MoveList.MovePriority.OPTIONAL);
                     break;
                 case IMPOSSIBLE:
                     continue;
