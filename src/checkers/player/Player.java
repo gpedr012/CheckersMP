@@ -3,12 +3,17 @@ package checkers.player;
 import checkers.ui.Board;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
+import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
@@ -34,7 +39,9 @@ public abstract class Player
 
         piecesList = new ArrayList<>(12);
         initPieces();
+        System.out.println(piecesList.size());
         board.addPiecesToBoard(this);
+        System.out.println(piecesList.size());
     }
 
 
@@ -60,9 +67,9 @@ public abstract class Player
 
     public abstract void processTurn();
 
-    public void endTurn()
+    public void endTurn(Piece piece)
     {
-        hasTurn.set(false);
+        setHasTurn(false);
     }
 
     public boolean hasPiecesLeft()
@@ -120,20 +127,26 @@ public abstract class Player
         TranslateTransition animation = createTranslateTransition(piece, currentPosition, destinationPosition);
         currentTile.removePiece();
         board.getChildren().add(piece);
-        animation.setOnFinished(e -> { finishAnimation(piece, destinationTile);});
         animation.play();
-
-
+        animation.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                finishAnimation(piece, destinationTile);
+            }
+        });
 
     }
 
     private void finishAnimation(Piece piece, Tile destination)
     {
 
-        System.out.println("destination.containsPiece() = " + destination.containsPiece());
+        board.getChildren().remove(piece);
         destination.addPiece(piece);
-        System.out.println("destination.containsPiece() = " + destination.containsPiece());
-        endTurn();
+        piece.setTranslateX(0);
+        piece.setTranslateY(0);
+        endTurn(piece);
 
     }
 
@@ -142,7 +155,6 @@ public abstract class Player
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pieceToAnimate);
         double offset = Tile.SIDE_LENGTH / 2d;
 
-        transition.setCycleCount(1);
         transition.setFromX(currentPosition.getCenterX() - offset);
         transition.setFromY(currentPosition.getCenterY() - offset);
 
