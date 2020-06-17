@@ -28,6 +28,7 @@ public abstract class Player
     private BooleanProperty hasTurn = new SimpleBooleanProperty(false);
     protected ObjectProperty<Piece> selectedPiece = new SimpleObjectProperty<>();
     protected List<Piece> piecesList;
+    private MoveCalculator moveCalculator;
     private Board board;
 
 
@@ -36,6 +37,7 @@ public abstract class Player
         this.playerColor = playerColor;
         this.playerNumber = playerNumber;
         this.board = board;
+        this.moveCalculator = new MoveCalculator(board, playerNumber, playerColor);
 
         piecesList = new ArrayList<>(12);
         initPieces();
@@ -44,6 +46,34 @@ public abstract class Player
         System.out.println(piecesList.size());
     }
 
+    public void calculatePossibleMoves()
+    {
+        List<MoveList> possibleMoves = new ArrayList<>(12);
+        boolean foundRequired = false;
+        for (int i = 0; i < piecesList.size(); i++)
+        {
+            piecesList.get(i).getPossibleMoves().clear();
+            MoveList newMoveList = moveCalculator.getMoves(piecesList.get(i));
+            if (newMoveList.getPriority() == MoveList.MovePriority.REQUIRED)
+            {
+                foundRequired = true;
+                piecesList.get(i).setPossibleMoves(newMoveList);
+            } else
+            {
+                possibleMoves.add(newMoveList);
+            }
+        }
+
+        if (!foundRequired)
+        {
+            for (int i = 0; i < piecesList.size(); i++)
+            {
+                piecesList.get(i).setPossibleMoves(possibleMoves.get(i));
+
+            }
+
+        }
+    }
 
 
     public void addPiece(Piece piece)
@@ -56,7 +86,7 @@ public abstract class Player
         List<Piece> piecesWithMoves = new ArrayList<>();
         for (Piece piece : piecesList)
         {
-            if(piece.hasAnyMoves())
+            if (piece.hasAnyMoves())
             {
                 piecesWithMoves.add(piece);
             }
@@ -67,10 +97,7 @@ public abstract class Player
 
     public abstract void processTurn();
 
-    public void endTurn(Piece piece)
-    {
-        setHasTurn(false);
-    }
+    public abstract void endTurn();
 
     public boolean hasPiecesLeft()
     {
@@ -141,12 +168,12 @@ public abstract class Player
 
     private void finishAnimation(Piece piece, Tile destination)
     {
-
         board.getChildren().remove(piece);
         destination.addPiece(piece);
         piece.setTranslateX(0);
         piece.setTranslateY(0);
-        endTurn(piece);
+        endTurn();
+        System.out.println("finished");
 
     }
 
