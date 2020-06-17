@@ -158,6 +158,7 @@ public class Piece extends StackPane
 
     public void setHighLight(boolean value, Color color)
     {
+        selectionCircle.setOpacity(1);
         selectionCircle.setVisible(value);
         selectionCircle.setStroke(color);
         if(value)
@@ -171,6 +172,7 @@ public class Piece extends StackPane
             selectionAnimation.stop();
         }
     }
+
 
     public int getCol()
     {
@@ -190,6 +192,24 @@ public class Piece extends StackPane
     @Override
     public String toString()
     {
+
         return String.format("Piece@Row:%d/Col%d", row, col);
+    }
+
+    public void getStatus()
+    {
+        if (innerCircle != null)
+        {
+            System.out.println("Inner circle nn");
+        }
+        if (outerCircle != null)
+        {
+            System.out.println("Outer circle nn");
+        }
+        if (selectionCircle != null)
+        {
+            System.out.println("Selection circle nn");
+        }
+
     }
 }
