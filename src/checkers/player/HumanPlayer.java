@@ -29,9 +29,7 @@ public class HumanPlayer extends Player
     private int playerNumber;
     private Piece.PieceColor playerColor;
     private Board board;
-    private MoveCalculator moveCalculator;
     private final Logic logic = new Logic();
-
 
     public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board)
     {
@@ -73,21 +71,33 @@ public class HumanPlayer extends Player
     @Override
     public void processTurn()
     {
-        for (Piece piece : piecesList)
+        calculatePossibleMoves();
+        setHasTurn(true);
+        for (Piece piece : getPiecesWithMoves())
         {
-            if(piece.hasAnyMoves())
-            {
-                piece.setHighLight(true, Color.WHITE);
-            }
+            piece.setHighLight(true, Color.WHITE);
+
         }
+
+    }
+
+    @Override
+    public void endTurn()
+    {
+        setHasTurn(false);
+        for (Piece piece : getPiecesWithMoves())
+        {
+            piece.setHighLight(false, null);
+
+        }
+        setHighLightTiles(false, selectedPiece.get());
+
 
 
     }
 
-
     private void initLogic()
     {
-
         selectedPiece.addListener(new ChangeListener<Piece>()
         {
             @Override
@@ -167,11 +177,13 @@ public class HumanPlayer extends Player
                 public void handle(MouseEvent mouseEvent)
                 {
                     Piece currentPiece = selectedPiece.get();
-                    System.out.println(currentPiece.toString());
                     Tile currentTile = board.getTile(currentPiece.getRow(), currentPiece.getCol());
                     Tile newTile = (Tile)mouseEvent.getSource();
                     playMovementAnimation(currentTile, newTile);
-
+                    newTile.highlightTile(false);
+                    currentPiece.setRow(newTile.getRow());
+                    currentPiece.setCol(newTile.getCol());
+                    endTurn();
 
                 }
             };
@@ -185,6 +197,14 @@ public class HumanPlayer extends Player
                     selectedPiece.setValue(clickedPiece);
                     clickedPiece.setHighLight(true, Color.GOLD);
                     setHighLightTiles(true, clickedPiece);
+                    Iterator<Tile> iterator = clickedPiece.getPossibleMoves().iterator();
+                    System.out.println("clickedPiece.getPossibleMoves().getPriority() = " + clickedPiece.getPossibleMoves().getPriority());
+                    while(iterator.hasNext())
+                    {
+                        System.out.println("iterator.next().toString() = " + iterator.next().toString());
+                    }
+
+
 
                 }
             };
