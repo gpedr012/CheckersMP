@@ -39,40 +39,11 @@ public class HumanPlayer extends Player
 
     }
 
-//    public void test()
-//    {
-//        Tile curTile = board.getTile(2,1);
-//        Tile newTile = board.getTile(3, 2);
-//
-//        double modifier = -40;
-//
-//        Bounds curB = curTile.localToScene(curTile.getBoundsInLocal());
-//        Bounds newB = newTile.localToScene(newTile.getBoundsInLocal());
-//
-//        System.out.println("curB.getCenterX() = " + curB.getCenterX());
-//        System.out.println("newB.getCenterX() = " + newB.getCenterX());
-//        System.out.println("curB.getCenterY() = " + curB.getCenterY());
-//        System.out.println("newB.getCenterY() = " + newB.getCenterY());
-//
-//        TranslateTransition translateTransition = new TranslateTransition(Duration.seconds(1.5), curTile.getPiece());
-//        translateTransition.setToX(newB.getCenterX() + modifier);
-//        translateTransition.setFromX(curB.getCenterX() + modifier);
-//        translateTransition.setToY(newB.getCenterY() + modifier);
-//        translateTransition.setFromY(curB.getCenterY() + modifier);
-//        translateTransition.setAutoReverse(true);
-//        Piece piece = curTile.getPiece();
-//        curTile.removePiece();
-//        translateTransition.setCycleCount(Timeline.INDEFINITE);
-//        board.getChildren().add(piece);
-//        translateTransition.play();
-//
-//    }
 
     @Override
     public void processTurn()
     {
         calculatePossibleMoves();
-        setHasTurn(true);
         for (Piece piece : getPiecesWithMoves())
         {
             piece.setHighLight(true, Color.WHITE);
@@ -183,7 +154,6 @@ public class HumanPlayer extends Player
                     newTile.highlightTile(false);
                     currentPiece.setRow(newTile.getRow());
                     currentPiece.setCol(newTile.getCol());
-                    endTurn();
 
                 }
             };
@@ -198,11 +168,7 @@ public class HumanPlayer extends Player
                     clickedPiece.setHighLight(true, Color.GOLD);
                     setHighLightTiles(true, clickedPiece);
                     Iterator<Tile> iterator = clickedPiece.getPossibleMoves().iterator();
-                    System.out.println("clickedPiece.getPossibleMoves().getPriority() = " + clickedPiece.getPossibleMoves().getPriority());
-                    while(iterator.hasNext())
-                    {
-                        System.out.println("iterator.next().toString() = " + iterator.next().toString());
-                    }
+
 
 
 
