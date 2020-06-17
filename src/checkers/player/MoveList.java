@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MoveList
 {
-    enum MovePriority
+    public enum MovePriority
     {
         OPTIONAL, REQUIRED, EMPTY
     }
@@ -16,13 +16,6 @@ public class MoveList
     private List<Tile> tiles;
     private MovePriority priority;
 
-
-
-    public MoveList(List<Tile> tiles)
-    {
-        this.tiles = tiles;
-        this.priority = MovePriority.EMPTY;
-    }
 
     public MoveList(List<Tile> tiles, MovePriority priority)
     {
@@ -33,17 +26,19 @@ public class MoveList
 
     public MoveList()
     {
-        this(new ArrayList<>(4));
+
+        this(new ArrayList<>(4), MovePriority.EMPTY);
+
     }
 
     public void addAll(MoveList incomingList)
     {
-        switch(priority)
+        switch (priority)
         {
             case REQUIRED:
                 break;
             case OPTIONAL:
-                if(incomingList.priority == MovePriority.REQUIRED)
+                if (incomingList.priority == MovePriority.REQUIRED)
                 {
                     tiles.clear();
                 }
@@ -54,10 +49,13 @@ public class MoveList
         }
     }
 
-    public void addMove(Tile tile)
+    public void addMove(Tile tile, MovePriority movePriority)
     {
         tiles.add(tile);
+        priority = movePriority;
+
     }
+
 
     public void clear()
     {
@@ -66,7 +64,8 @@ public class MoveList
 
     public boolean isEmpty()
     {
-        return tiles.isEmpty();
+        return priority == MovePriority.EMPTY;
+
     }
 
     public MovePriority getPriority()
@@ -79,6 +78,7 @@ public class MoveList
 
         this.priority = priority;
     }
+
 
     public Iterator<Tile> iterator()
     {
