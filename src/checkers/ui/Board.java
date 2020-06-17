@@ -42,8 +42,8 @@ public class Board extends GridPane
 
             for (int j = 0; j < NUM_COLS; j++)
             {
-                Tile tile = colorAlternator ? Tile.createLightTile() : Tile.createDarkTile();
-                add(tile, j, i);
+                Tile tile = colorAlternator ? Tile.createLightTile(i, j) : Tile.createDarkTile(i, j);
+                add(tile, j, i); //gridpane uses col, row as args. reason why it's reversed.
                 tiles.get(i).add(tile);
                 colorAlternator = !colorAlternator;
             }
