@@ -19,16 +19,20 @@ public class Tile extends StackPane
     private boolean isEdge;
     private final Color color;
     private FadeTransition highLightAnimation;
+    private final int row, col;
+
 
 
     public static final Color LIGHT_COLOR = Color.SANDYBROWN;
     public static final Color DARK_COLOR = Color.SADDLEBROWN;
 
 
-    public Tile(Color color)
+    public Tile(Color color, int row, int col)
     {
         //true = light tile, false = dark tile.
         this.color = color;
+        this.row = row;
+        this.col = col;
         tileBackground.setFill(color);
         initHighLight();
         initAnim();
@@ -58,14 +62,14 @@ public class Tile extends StackPane
     }
 
 
-    public static Tile createLightTile()
+    public static Tile createLightTile(int row, int col)
     {
-        return new Tile(LIGHT_COLOR);
+        return new Tile(LIGHT_COLOR, row, col);
     }
 
-    public static Tile createDarkTile()
+    public static Tile createDarkTile(int row, int col)
     {
-        return new Tile(DARK_COLOR);
+        return new Tile(DARK_COLOR, row, col);
     }
 
     public boolean containsPiece()
@@ -127,4 +131,36 @@ public class Tile extends StackPane
 
     }
 
+    //TODO: DEBUG<REMOVE LATER.
+    public void highlightTile(boolean value, Color color)
+    {
+        highLight.setVisible(value);
+        if(value)
+        {
+            highLightAnimation.play();
+        }
+        else
+        {
+            highLightAnimation.jumpTo(Duration.ZERO);
+            highLightAnimation.stop();
+        }
+        highLight.setStroke(color);
+
+    }
+
+    @Override
+    public String toString()
+    {
+        return String.format("Tile@Col=%dRow=%d\n", col, row);
+    }
+
+    public int getRow()
+    {
+        return row;
+    }
+
+    public int getCol()
+    {
+        return col;
+    }
 }
