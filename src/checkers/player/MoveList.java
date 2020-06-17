@@ -59,6 +59,7 @@ public class MoveList
 
     public void clear()
     {
+        priority = MovePriority.EMPTY;
         tiles.clear();
     }
 
