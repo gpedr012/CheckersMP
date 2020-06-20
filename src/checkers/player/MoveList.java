@@ -15,6 +15,7 @@ public class MoveList
 
     private List<Tile> tiles;
     private MovePriority priority;
+    private Tile opponentTile = null;
 
 
     public MoveList(List<Tile> tiles, MovePriority priority)
@@ -80,6 +81,20 @@ public class MoveList
         this.priority = priority;
     }
 
+    public void setOpponentTile(Tile opponentTile)
+    {
+        this.opponentTile = opponentTile;
+    }
+
+    public Tile getOpponentTile()
+    {
+        if(priority != MovePriority.REQUIRED)
+        {
+            throw new RuntimeException("There is no opponent tile to jump to.");
+        }
+        else
+            return opponentTile;
+    }
 
     public Iterator<Tile> iterator()
     {

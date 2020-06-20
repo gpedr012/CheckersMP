@@ -150,10 +150,17 @@ public class HumanPlayer extends Player
                     Piece currentPiece = selectedPiece.get();
                     Tile currentTile = board.getTile(currentPiece.getRow(), currentPiece.getCol());
                     Tile newTile = (Tile)mouseEvent.getSource();
+
                     playMovementAnimation(currentTile, newTile);
+
                     newTile.highlightTile(false);
                     currentPiece.setRow(newTile.getRow());
                     currentPiece.setCol(newTile.getCol());
+
+                    if(selectedPiece.get().getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
+                    {
+                        selectedPiece.get().getPossibleMoves().getOpponentTile().removePiece();
+                    }
 
                 }
             };

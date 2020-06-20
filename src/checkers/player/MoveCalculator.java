@@ -4,6 +4,7 @@ import checkers.ui.Board;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
@@ -31,9 +32,7 @@ public class MoveCalculator
     {
         for(Piece piece: pieces)
         {
-            System.out.println(piece.toString());
             piece.setPossibleMoves(getMoves(piece));
-
         }
     }
 
@@ -98,10 +97,12 @@ public class MoveCalculator
         for (Move move : moveTypeStack
         )
         {
-            switch (move.getType())
+            switch (move.type)
             {
                 case REQUIRED:
+                    moveList.clear();
                     moveList.addMove(move.getTile(), MoveList.MovePriority.REQUIRED);
+                    moveList.setOpponentTile(move.opponentTile);
                     return moveList;
                 case OPTIONAL:
                     moveList.addMove(move.getTile(), MoveList.MovePriority.OPTIONAL);
@@ -122,27 +123,13 @@ public class MoveCalculator
         private int row;
         private int col;
         private MoveType type;
+        private Tile opponentTile;
 
         public Move(int row, int col)
         {
             this.row = row;
             this.col = col;
 
-        }
-
-        public int getRow()
-        {
-            return row;
-        }
-
-        public int getCol()
-        {
-            return col;
-        }
-
-        public MoveType getType()
-        {
-            return type;
         }
 
         public Tile getTile()
@@ -154,15 +141,18 @@ public class MoveCalculator
         {
             Tile moveTile = board.getTile(row, col);
 
+
             if (moveTile.containsPiece())
             {
                 if (moveTile.getPiece().getColor() != playerColor && canJumpToTile(row + rowModifier, col + colModifier))
                 {
+                    opponentTile = moveTile;
                     type = MoveType.REQUIRED;
                     row += rowModifier;
                     col += colModifier;
                 } else
                 {
+
                     type = MoveType.IMPOSSIBLE;
                 }
             } else
