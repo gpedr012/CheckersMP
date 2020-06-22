@@ -13,6 +13,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -58,11 +59,12 @@ public class Piece extends StackPane
     private Circle innerCircle = new Circle (28);
     private Circle selectionCircle = new Circle(outerCircle.getRadius());
     private FadeTransition selectionAnimation = new FadeTransition(Duration.seconds(1.5), selectionCircle);
-    private final Image crownImage = new Image(getClass().getResourceAsStream("/crown.png"));
-    private final ImageView crownIView = new ImageView(crownImage);
+    private Image crownImage;
+    private ImageView crownIView;
     private MoveList possibleMoves;
     private PieceColor color;
     private int row = -1, col = -1;
+    private boolean isEliminated = false;
 
 
 
@@ -86,9 +88,6 @@ public class Piece extends StackPane
 
     private void initGraphics()
     {
-        crownIView.setFitWidth(35);
-        crownIView.setFitHeight(35);
-
         innerCircle.setFill(null);
         innerCircle.setStrokeWidth(6);
 
@@ -139,8 +138,30 @@ public class Piece extends StackPane
         return crowned;
     }
 
+    public void setEliminated(boolean value)
+    {
+        this.isEliminated = value;
+    }
+
+    public boolean isEliminated()
+    {
+        return isEliminated;
+    }
+
     public void setCrowned(boolean val)
     {
+        Image crownImage = new Image(getClass().getResourceAsStream("/crown.png"));
+        ImageView crownIView = new ImageView(crownImage);
+        crownIView.setFitWidth(35);
+        crownIView.setFitHeight(35);
+
+        if(color == PieceColor.DARK)
+        {
+            ColorAdjust colorAdjust = new ColorAdjust();
+            colorAdjust.setBrightness(1);
+            crownIView.setEffect(colorAdjust);
+        }
+
         this.crowned = val;
         getChildren().add(crownIView);
     }
