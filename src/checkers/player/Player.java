@@ -17,7 +17,10 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Predicate;
 
 public abstract class Player
 {
@@ -48,6 +51,7 @@ public abstract class Player
 
     public void calculatePossibleMoves()
     {
+        cleanUpPiecesList();
         List<MoveList> possibleMoves = new ArrayList<>(12);
         boolean foundRequired = false;
         for (int i = 0; i < piecesList.size(); i++)
@@ -75,6 +79,10 @@ public abstract class Player
         }
     }
 
+    private void cleanUpPiecesList()
+    {
+        piecesList.removeIf(Piece::isEliminated);
+    }
 
     public void addPiece(Piece piece)
     {
@@ -136,6 +144,7 @@ public abstract class Player
         {
             this.addPiece(new Piece(this.playerColor));
         }
+
     }
 
 
@@ -173,7 +182,7 @@ public abstract class Player
         piece.setTranslateX(0);
         piece.setTranslateY(0);
         endTurn();
-        System.out.println("finished");
+        System.out.println("finished animation.");
 
     }
 
