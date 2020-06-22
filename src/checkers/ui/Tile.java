@@ -2,10 +2,15 @@ package checkers.ui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+
+import java.util.Iterator;
 
 public class Tile extends StackPane
 {
@@ -38,8 +43,6 @@ public class Tile extends StackPane
         initAnim();
 
         getChildren().addAll(tileBackground, highLight);
-
-
     }
 
     private void initHighLight()
@@ -107,6 +110,24 @@ public class Tile extends StackPane
     public boolean isEdge()
     {
         return isEdge;
+
+    }
+
+    public void eliminatePiece()
+    {
+        containsPiece = false;
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1.5), piece);
+        fadeTransition.setToValue(0);
+        fadeTransition.play();
+        piece.setEliminated(true);
+        fadeTransition.setOnFinished(new EventHandler<ActionEvent>()
+        {
+            @Override
+            public void handle(ActionEvent event)
+            {
+                removePiece();
+            }
+        });
 
     }
 
