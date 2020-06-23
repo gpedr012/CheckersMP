@@ -3,23 +3,12 @@ package checkers.player;
 import checkers.ui.Board;
 import checkers.ui.Piece;
 import checkers.ui.Tile;
-import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
-import javafx.animation.TranslateTransition;
 import javafx.beans.binding.ObjectBinding;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
-import javafx.geometry.Bounds;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.LineTo;
-import javafx.scene.shape.MoveTo;
-import javafx.scene.shape.Path;
-import javafx.util.Duration;
 
 import java.util.Iterator;
 
@@ -62,8 +51,6 @@ public class HumanPlayer extends Player
 
         }
         setHighLightTiles(false, selectedPiece.get());
-
-
 
     }
 
@@ -159,9 +146,8 @@ public class HumanPlayer extends Player
 
                     if(selectedPiece.get().getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
                     {
-                        selectedPiece.get().getPossibleMoves().getOpponentTile().removePiece();
+                        selectedPiece.get().getPossibleMoves().getOpponentTile().eliminatePiece();
                     }
-
                 }
             };
 
@@ -174,10 +160,6 @@ public class HumanPlayer extends Player
                     selectedPiece.setValue(clickedPiece);
                     clickedPiece.setHighLight(true, Color.GOLD);
                     setHighLightTiles(true, clickedPiece);
-                    Iterator<Tile> iterator = clickedPiece.getPossibleMoves().iterator();
-
-
-
 
                 }
             };

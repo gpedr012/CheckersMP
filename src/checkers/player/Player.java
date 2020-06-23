@@ -181,6 +181,9 @@ public abstract class Player
         destination.addPiece(piece);
         piece.setTranslateX(0);
         piece.setTranslateY(0);
+        if((destination.getRow() == 0 || destination.getRow() == 7) && !piece.isCrowned())
+            piece.setCrowned(true);
+
         endTurn();
         System.out.println("finished animation.");
 
