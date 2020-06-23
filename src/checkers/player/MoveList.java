@@ -45,6 +45,10 @@ public class MoveList
                 }
                 tiles.addAll(incomingList.tiles);
                 break;
+            case EMPTY:
+                this.tiles = incomingList.tiles;
+                this.priority = incomingList.priority;
+                break;
             default:
                 tiles.addAll(incomingList.tiles);
         }
