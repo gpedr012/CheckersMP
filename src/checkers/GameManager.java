@@ -26,7 +26,7 @@ public class GameManager
 
     public void startGame()
     {
-        playerOne.processTurn();
+        playerOne.setHasTurn(true);
 
     }
 
@@ -43,7 +43,7 @@ public class GameManager
                 }
                 else
                 {
-                    playerTwo.processTurn();
+                    playerTwo.setHasTurn(true);
                 }
             }
         });
@@ -59,7 +59,7 @@ public class GameManager
                 }
                 else
                 {
-                    playerOne.processTurn();
+                    playerOne.setHasTurn(true);
                 }
             }
         });
