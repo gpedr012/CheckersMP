@@ -1,0 +1,39 @@
+#pane
+{
+    -fx-background-image: url("/mainbg.jpg");
+    -fx-background-size: 500 500;
+    -fx-background-repeat: repeat;
+    -fx-background-position: top center;
+}
+#title-label
+{
+    -fx-font-size: 85px;
+    -fx-font-family: "Garamond";
+    -fx-text-fill: red;
+    -fx-effect: dropshadow(three-pass-box, #6f0606, 5, 0.66, 0, 0);
+}
+
+#play-btn
+{
+    -fx-effect: dropshadow(three-pass-box, #276873, 2, 0.50, 0, 0);
+    -fx-background-color: #599bb3;
+    -fx-background-radius: 5,5,5,5;
+    -fx-background-insets: 2,2,2,2;
+    -fx-border-radius: 5,5,5,5;
+    -fx-border-style: solid;
+    -fx-border-color: #29668f;
+    -fx-border-width: 5px;
+    -fx-text-fill: white;
+    -fx-font-family: "Verdana";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+
+}
+#play-btn:hover
+{
+    -fx-background-color: #3c7e93;
+    -fx-text-fill: #adadad;
+    -fx-cursor: hand;
+}
+
