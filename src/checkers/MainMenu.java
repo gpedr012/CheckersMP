@@ -14,10 +14,7 @@ public class MainMenu extends Application
     {
         Parent root = FXMLLoader.load(getClass().getResource("mainmenu.fxml"));
         stage.setScene(new Scene(root, 500, 500));
-        stage.setTitle("Checkers Game");
         stage.show();
-
-
 
     }
 

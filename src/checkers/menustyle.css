@@ -15,7 +15,7 @@
 
 #play-btn
 {
-    -fx-effect: dropshadow(three-pass-box, #276873, 2, 0.50, 0, 0);
+    -fx-effect: dropshadow(three-pass-box, #276873, 20, 0.50, 0, 0);
     -fx-background-color: #599bb3;
     -fx-background-radius: 5,5,5,5;
     -fx-background-insets: 2,2,2,2;
@@ -33,6 +33,30 @@
 #play-btn:hover
 {
     -fx-background-color: #3c7e93;
+    -fx-text-fill: #adadad;
+    -fx-cursor: hand;
+}
+
+#cancel-btn
+{
+    -fx-effect: dropshadow(three-pass-box, #862b2b, 20, 0.50, 0, 0);
+    -fx-background-color: #e01616;
+    -fx-background-radius: 5,5,5,5;
+    -fx-background-insets: 2,2,2,2;
+    -fx-border-radius: 5,5,5,5;
+    -fx-border-style: solid;
+    -fx-border-color: #8f2929;
+    -fx-border-width: 5px;
+    -fx-text-fill: white;
+    -fx-font-family: "Verdana";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+
+
+}
+#cancel-btn:hover
+{
+    -fx-background-color: #933c3c;
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 }
