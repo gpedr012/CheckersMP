@@ -116,7 +116,7 @@ public class Tile extends StackPane
     public void eliminatePiece()
     {
         containsPiece = false;
-        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(1.5), piece);
+        FadeTransition fadeTransition = new FadeTransition(Duration.seconds(0.25), piece);
         fadeTransition.setToValue(0);
         fadeTransition.play();
         piece.setEliminated(true);
