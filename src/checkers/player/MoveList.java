@@ -17,7 +17,7 @@ public class MoveList
     private MovePriority priority;
     private Tile opponentTile = null;
 
-
+    //TODO: Improve how if required can forget to set opponent tile. Add statics.
     public MoveList(List<Tile> tiles, MovePriority priority)
     {
         this.tiles = tiles;
@@ -85,9 +85,20 @@ public class MoveList
         this.priority = priority;
     }
 
+
     public void setOpponentTile(Tile opponentTile)
     {
         this.opponentTile = opponentTile;
+    }
+
+    public int size()
+    {
+        return tiles.size();
+    }
+
+    public Tile get(int index)
+    {
+        return tiles.get(index);
     }
 
     public Tile getOpponentTile()
