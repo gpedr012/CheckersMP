@@ -15,15 +15,11 @@ import java.util.Iterator;
 
 public class HumanPlayer extends Player
 {
-    private int playerNumber;
-    private Piece.PieceColor playerColor;
-    private Board board;
     private final Logic logic = new Logic();
 
     public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board)
     {
         super(playerColor, playerNumber, board);
-        this.board = board;
         initLogic();
 
     }
@@ -135,19 +131,12 @@ public class HumanPlayer extends Player
                 public void handle(MouseEvent mouseEvent)
                 {
                     Piece currentPiece = selectedPiece.get();
-                    Tile currentTile = board.getTile(currentPiece.getRow(), currentPiece.getCol());
+                    Tile currentTile = getBoard().getTile(currentPiece.getRow(), currentPiece.getCol());
                     Tile newTile = (Tile)mouseEvent.getSource();
 
                     playMovementAnimation(currentTile, newTile);
 
                     newTile.highlightTile(false);
-                    currentPiece.setRow(newTile.getRow());
-                    currentPiece.setCol(newTile.getCol());
-
-                    if(selectedPiece.get().getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
-                    {
-                        selectedPiece.get().getPossibleMoves().getOpponentTile().eliminatePiece();
-                    }
                 }
             };
 
