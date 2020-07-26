@@ -50,55 +50,58 @@ public class MainMenu extends Application
 
         Button bottomBtn = (Button)root.getBottom();
 
-        switch (sceneType)
+        if(sceneType == SceneType.MAIN)
         {
-            case MAIN:
-                defaultBtnOne.setText("LOCAL PLAY");
-                defaultBtnTwo.setText("ONLINE PLAY");
-                bottomBtn.setText("QUIT");
-                defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.LOCAL)));
-                //defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
-                bottomBtn.setOnAction(event -> Platform.exit());
-                center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
-                break;
 
+            defaultBtnOne.setText("LOCAL PLAY");
+            defaultBtnTwo.setText("ONLINE PLAY");
+            bottomBtn.setText("QUIT");
+            defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.LOCAL)));
+            //defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
+            bottomBtn.setOnAction(event -> Platform.exit());
+            center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
+        }
+        else if(sceneType == SceneType.LOCAL)
+        {
+            defaultBtnOne.setText("ONE PLAYER");
+            defaultBtnTwo.setText("TWO PLAYERS");
+            bottomBtn.setText("GO BACK");
 
-            case LOCAL:
-                defaultBtnOne.setText("ONE PLAYER");
-                defaultBtnTwo.setText("TWO PLAYERS");
-                bottomBtn.setText("GO BACK");
+            defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.SINGLE_PLAYER)));
+            defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.TWO_PLAYER)));
+            bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
+            center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
+        }
+        else if(sceneType == SceneType.ONLINE)
+        {}
+        else if(sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER)
+        {
 
-                defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.SINGLE_PLAYER)));
-                defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.TWO_PLAYER)));
-                bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
-                center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
-                break;
+            Label chooseColorLbl = new Label("CHOOSE A COLOR");
+            Button playBtn = new Button("PLAY");
+            ColorToggleMenu colorSelector = new ColorToggleMenu();
 
+            chooseColorLbl.setId("subtitle-label");
+            playBtn.setId("accept-btn");
 
+            center.setAlignment(Pos.TOP_CENTER);
+            bottomBtn.setText("GO BACK");
 
+            center.getChildren().addAll(chooseColorLbl, colorSelector);
+            bottomBtn.setOnAction(e -> changeScene(setUpScene(SceneType.LOCAL)));
 
-
-            case ONLINE:
-                break;
-            case SINGLE_PLAYER:
-                //<Controls Needed//
+            if(sceneType == SceneType.SINGLE_PLAYER)
+            {
                 ToggleGroup difficultyToggles = new ToggleGroup();
                 ToggleButton easyToggle = new ToggleButton("EASY");
                 ToggleButton mediumToggle = new ToggleButton("MEDIUM");
                 HBox difficultyToggleContainer = new HBox(easyToggle, mediumToggle);
-                Label chooseColorLbl = new Label("CHOOSE A COLOR");
                 Label difficultyLbl = new Label("CHOOSE A DIFFICULTY");
-                Button playBtn = new Button("PLAY");
-                ColorToggleMenu colorSelector = new ColorToggleMenu();
 
-                //<Set up CSS Ids>//
-                chooseColorLbl.setId("subtitle-label");
-                difficultyLbl.setId("subtitle-label");
-                playBtn.setId("accept-btn");
                 easyToggle.setId("accept-btn");
                 mediumToggle.setId("accept-btn");
+                difficultyLbl.setId("subtitle-label");
 
-                //<Assign toggles to group>//
                 easyToggle.setToggleGroup(difficultyToggles);
                 mediumToggle.setToggleGroup(difficultyToggles);
                 difficultyToggles.selectToggle(easyToggle);
@@ -106,21 +109,46 @@ public class MainMenu extends Application
                 difficultyToggleContainer.setAlignment(Pos.CENTER);
                 difficultyToggleContainer.setSpacing(20);
 
-                bottomBtn.setOnAction(e -> changeScene(setUpScene(SceneType.LOCAL)));
-                playBtn.setOnAction(e -> startSingleGame(((ToggleButton)difficultyToggles.getSelectedToggle()).getText().toLowerCase(), colorSelector.getSelection()));
 
-                center.getChildren().addAll(chooseColorLbl, colorSelector , difficultyLbl, difficultyToggleContainer, playBtn);
-                center.setAlignment(Pos.TOP_CENTER);
-                bottomBtn.setText("GO BACK");
+                center.getChildren().addAll(difficultyLbl, difficultyToggleContainer, playBtn);
+
+                playBtn.setOnAction(e ->
+                {
+                    try
+                    {
+                        startSingleGame(((ToggleButton) difficultyToggles.getSelectedToggle()).getText().toLowerCase(), colorSelector.getSelection());
+                    } catch (Exception exception)
+                    {
+                        exception.printStackTrace();
+                    }
+                });
+
+            }
+            else
+            {
+                center.getChildren().add(playBtn);
+
+                playBtn.setOnAction(e ->
+                {
+                    try
+                    {
+                        startTwoPlayerGame(colorSelector.getSelection());
+                    } catch (Exception exception)
+                    {
+                        exception.printStackTrace();
+                    }
+                });
+
+            }
 
 
-                break;
 
 
-            case TWO_PLAYER:
 
-                break;
+
+
         }
+
 
 
 
@@ -128,7 +156,15 @@ public class MainMenu extends Application
         return new Scene(root, 500, 500);
     }
 
-    private void startSingleGame(String selectedDifficulty, Piece.PieceColor selectedColor)
+    private void startTwoPlayerGame(Piece.PieceColor colorSelected) throws Exception
+    {
+        Board gameBoard = new Board();
+        Piece.PieceColor playerTwoColor = colorSelected == Piece.PieceColor.DARK ? Piece.PieceColor.LIGHT : Piece.PieceColor.DARK;
+        GameLoop twoPlayerGame = new GameLoop(gameBoard, new HumanPlayer(colorSelected, 1, gameBoard), new HumanPlayer(playerTwoColor, 2, gameBoard));
+        twoPlayerGame.start(mainStage);
+    }
+
+    private void startSingleGame(String selectedDifficulty, Piece.PieceColor selectedColor) throws Exception
     {
         Board gameBoard = new Board();
         Player playerOne = new HumanPlayer(selectedColor, 1, gameBoard);
@@ -139,15 +175,7 @@ public class MainMenu extends Application
             Player playerTwo = new EasyAI(AIcolor, 2, gameBoard);
             GameLoop easyGame = new GameLoop(gameBoard, playerOne, playerTwo);
 
-            try
-            {
-                easyGame.start(mainStage);
-            } catch (Exception e)
-            {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-
+            easyGame.start(mainStage);
 
         }
         else if(selectedDifficulty.equals("medium"))
