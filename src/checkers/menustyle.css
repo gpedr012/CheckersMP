@@ -12,8 +12,15 @@
     -fx-text-fill: red;
     -fx-effect: dropshadow(three-pass-box, #6f0606, 5, 0.66, 0, 0);
 }
+#subtitle-label
+{
+    -fx-font-family: Georgia;
+    -fx-font-size: 20;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
 
-#play-btn
+#accept-btn
 {
     -fx-effect: dropshadow(three-pass-box, #276873, 20, 0.50, 0, 0);
     -fx-background-color: #599bb3;
@@ -30,13 +37,17 @@
 
 
 }
-#play-btn:hover
+#accept-btn:hover
 {
     -fx-background-color: #3c7e93;
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 }
 
+#accept-btn:selected
+{
+    -fx-border-color: white;
+}
 #cancel-btn
 {
     -fx-effect: dropshadow(three-pass-box, #862b2b, 20, 0.50, 0, 0);
@@ -60,4 +71,12 @@
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 }
+
+#sethover:hover
+{
+    -fx-cursor: hand;
+    -fx-highlight-fill: white;
+}
+
+
 
