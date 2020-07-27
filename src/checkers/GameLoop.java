@@ -14,6 +14,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -41,7 +42,11 @@ public class GameLoop extends Application
     public void start(Stage stage) throws Exception
     {
 
-        AnchorPane root = new AnchorPane();
+        BorderPane root = new BorderPane();
+        AnchorPane gamePane = new AnchorPane();
+
+        root.setCenter(gamePane);
+
 
         GameManager gameManager = new GameManager(board, player1, player2);
 
@@ -55,6 +60,7 @@ public class GameLoop extends Application
 
 
     }
+
 
 
 

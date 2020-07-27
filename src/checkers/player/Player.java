@@ -49,6 +49,16 @@ public abstract class Player
         System.out.println(piecesList.size());
     }
 
+    /**
+     * Cleans up the list of pieces (removes any eliminated pieces from  the list
+     * Then clears the current movelist for each piece.
+     * Scans through the list of pieces, and if it has required priority then the list is immediately assigned.
+     *
+     * Otherwise if no required moves were found it assigns them all to each piece.
+     *
+     * This way if there's a required move, only other required moves are allowed to be executed and non required are not
+     * processed so they do not exist.
+     */
     public void calculatePossibleMoves()
     {
         cleanUpPiecesList();
@@ -153,6 +163,11 @@ public abstract class Player
         return piecesList.get(index);
     }
 
+    protected Board getBoard()
+    {
+        return board;
+    }
+
     protected void playMovementAnimation(Tile currentTile, Tile destinationTile)
     {
         Piece piece = currentTile.getPiece();
@@ -181,8 +196,15 @@ public abstract class Player
         destination.addPiece(piece);
         piece.setTranslateX(0);
         piece.setTranslateY(0);
+        if(piece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
+        {
+            piece.getPossibleMoves().getOpponentTile().eliminatePiece();
+        }
         if((destination.getRow() == 0 || destination.getRow() == 7) && !piece.isCrowned())
             piece.setCrowned(true);
+
+        piece.setRow(destination.getRow());
+        piece.setCol(destination.getCol());
 
         endTurn();
         System.out.println("finished animation.");
