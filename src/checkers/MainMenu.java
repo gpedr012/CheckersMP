@@ -24,12 +24,14 @@ public class MainMenu extends Application
     }
 
     Stage mainStage;
+
     @Override
     public void start(Stage stage) throws Exception
     {
         Scene mainMenuScene = setUpScene(SceneType.MAIN);
         mainStage = stage;
         stage.setScene(mainMenuScene);
+        stage.setTitle("Main Menu");
         stage.show();
 
     }
@@ -46,11 +48,11 @@ public class MainMenu extends Application
         defaultBtnTwo.setId("accept-btn");
         defaultBtnTwo.setPrefSize(200, 55);
 
-        VBox center = (VBox)root.getCenter();
+        VBox center = (VBox) root.getCenter();
 
-        Button bottomBtn = (Button)root.getBottom();
+        Button bottomBtn = (Button) root.getBottom();
 
-        if(sceneType == SceneType.MAIN)
+        if (sceneType == SceneType.MAIN)
         {
 
             defaultBtnOne.setText("LOCAL PLAY");
@@ -60,8 +62,7 @@ public class MainMenu extends Application
             //defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
             bottomBtn.setOnAction(event -> Platform.exit());
             center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
-        }
-        else if(sceneType == SceneType.LOCAL)
+        } else if (sceneType == SceneType.LOCAL)
         {
             defaultBtnOne.setText("ONE PLAYER");
             defaultBtnTwo.setText("TWO PLAYERS");
@@ -71,10 +72,9 @@ public class MainMenu extends Application
             defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.TWO_PLAYER)));
             bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
             center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
-        }
-        else if(sceneType == SceneType.ONLINE)
-        {}
-        else if(sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER)
+        } else if (sceneType == SceneType.ONLINE)
+        {
+        } else if (sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER)
         {
 
             Label chooseColorLbl = new Label("CHOOSE A COLOR");
@@ -90,7 +90,7 @@ public class MainMenu extends Application
             center.getChildren().addAll(chooseColorLbl, colorSelector);
             bottomBtn.setOnAction(e -> changeScene(setUpScene(SceneType.LOCAL)));
 
-            if(sceneType == SceneType.SINGLE_PLAYER)
+            if (sceneType == SceneType.SINGLE_PLAYER)
             {
                 ToggleGroup difficultyToggles = new ToggleGroup();
                 ToggleButton easyToggle = new ToggleButton("EASY");
@@ -123,8 +123,7 @@ public class MainMenu extends Application
                     }
                 });
 
-            }
-            else
+            } else
             {
                 center.getChildren().add(playBtn);
 
@@ -142,15 +141,7 @@ public class MainMenu extends Application
             }
 
 
-
-
-
-
-
         }
-
-
-
 
 
         return new Scene(root, 500, 500);
@@ -170,15 +161,14 @@ public class MainMenu extends Application
         Player playerOne = new HumanPlayer(selectedColor, 1, gameBoard);
         Piece.PieceColor AIcolor = selectedColor == Piece.PieceColor.DARK ? Piece.PieceColor.LIGHT : Piece.PieceColor.DARK;
 
-        if(selectedDifficulty.equals("easy"))
+        if (selectedDifficulty.equals("easy"))
         {
             Player playerTwo = new EasyAI(AIcolor, 2, gameBoard);
             GameLoop easyGame = new GameLoop(gameBoard, playerOne, playerTwo);
 
             easyGame.start(mainStage);
 
-        }
-        else if(selectedDifficulty.equals("medium"))
+        } else if (selectedDifficulty.equals("medium"))
         {
 
         }
