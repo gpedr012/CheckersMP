@@ -1,3 +1,13 @@
+#home-btn
+{
+    -fx-background-image: url("/homebtn.png");
+    -fx-background-position: center;
+    -fx-background-size: auto ;
+    -fx-background-repeat: no-repeat;
+
+}
+
+
 #pane
 {
     -fx-background-image: url("/mainbg.jpg");
