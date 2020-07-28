@@ -172,21 +172,14 @@ public abstract class Player
     {
         Piece piece = currentTile.getPiece();
 
-        Bounds currentPosition = currentTile.localToScene(currentTile.getBoundsInLocal());
-        Bounds destinationPosition = destinationTile.localToScene(destinationTile.getBoundsInLocal());
+        Bounds currentPosition = currentTile.localToParent(currentTile.getBoundsInLocal());
+        Bounds destinationPosition = destinationTile.localToParent(destinationTile.getBoundsInLocal());
 
         TranslateTransition animation = createTranslateTransition(piece, currentPosition, destinationPosition);
         currentTile.removePiece();
         board.getChildren().add(piece);
         animation.play();
-        animation.setOnFinished(new EventHandler<ActionEvent>()
-        {
-            @Override
-            public void handle(ActionEvent event)
-            {
-                finishAnimation(piece, destinationTile);
-            }
-        });
+        animation.setOnFinished(event -> finishAnimation(piece, destinationTile));
 
     }
 
