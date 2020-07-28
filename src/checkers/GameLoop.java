@@ -36,6 +36,13 @@ public class GameLoop extends Application
     Scene scene;
     Stage stage;
 
+    public GameLoop()
+    {
+        this.board = new Board();
+        this.player1 = new HumanPlayer(Piece.PieceColor.DARK, 1, board);
+        this.player2 = new HumanPlayer(Piece.PieceColor.LIGHT, 2, board);
+    }
+
     public GameLoop(Board board, Player player1, Player player2)
     {
         this.player1 = player1;
@@ -51,11 +58,10 @@ public class GameLoop extends Application
         HBox rootContainer = new HBox();
         BorderPane contentHolder = new BorderPane();
         HBox boardContainer = new HBox(board);
+
         this.stage = stage;
 
-        boardContainer.setMaxSize(0,0);
-        boardContainer.setAlignment(Pos.CENTER);
-        boardContainer.setStyle("-fx-border-color: #5c2a0c; -fx-border-width: 20px");
+       boardContainer.setAlignment(Pos.CENTER);
 
         contentHolder.setTop(getTopMenu());
         contentHolder.setCenter(boardContainer);
