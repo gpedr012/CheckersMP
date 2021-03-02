@@ -1,33 +1,21 @@
 package checkers;
 
-import checkers.player.EasyAI;
+
 import checkers.player.HumanPlayer;
-import checkers.player.MoveList;
 import checkers.player.Player;
 import checkers.ui.Board;
 import checkers.ui.Piece;
-import checkers.ui.Tile;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
-import java.util.List;
 
-
-public class GameLoop extends Application
-{
+public class GameLoop extends Application {
 
 
     Player player1;
@@ -36,15 +24,13 @@ public class GameLoop extends Application
     Scene scene;
     Stage stage;
 
-    public GameLoop()
-    {
+    public GameLoop() {
         this.board = new Board();
         this.player1 = new HumanPlayer(Piece.PieceColor.DARK, 1, board);
         this.player2 = new HumanPlayer(Piece.PieceColor.LIGHT, 2, board);
     }
 
-    public GameLoop(Board board, Player player1, Player player2)
-    {
+    public GameLoop(Board board, Player player1, Player player2) {
         this.player1 = player1;
         this.player2 = player2;
         this.board = board;
@@ -52,16 +38,15 @@ public class GameLoop extends Application
     }
 
     @Override
-    public void start(Stage stage) throws Exception
-    {
-        GameManager gameManager = new GameManager(board, player1, player2);
+    public void start(Stage stage) throws Exception {
+        checkers.GameManager gameManager = new checkers.GameManager(board, player1, player2);
         HBox rootContainer = new HBox();
         BorderPane contentHolder = new BorderPane();
         HBox boardContainer = new HBox(board);
 
         this.stage = stage;
 
-       boardContainer.setAlignment(Pos.CENTER);
+        boardContainer.setAlignment(Pos.CENTER);
 
         contentHolder.setTop(getTopMenu());
         contentHolder.setCenter(boardContainer);
@@ -69,7 +54,6 @@ public class GameLoop extends Application
 
         rootContainer.getStylesheets().add("/checkers/menustyle.css");
         rootContainer.getChildren().add(contentHolder);
-
 
 
         stage.setTitle("Board");
@@ -80,23 +64,19 @@ public class GameLoop extends Application
         gameManager.startGame();
 
 
-
     }
 
 
-    public HBox getTopMenu()
-    {
+    public HBox getTopMenu() {
         HBox container = new HBox();
         container.setAlignment(Pos.TOP_LEFT);
         Button homeBtn = new Button();
-        homeBtn.setPrefSize(50,50);
+        homeBtn.setPrefSize(50, 50);
         homeBtn.setId("home-btn");
         homeBtn.setOnAction(e -> {
-            try
-            {
-                new MainMenu().start(stage);
-            } catch (Exception exception)
-            {
+            try {
+                new checkers.MainMenu().start(stage);
+            } catch (Exception exception) {
                 exception.printStackTrace();
             }
         });
@@ -106,8 +86,7 @@ public class GameLoop extends Application
         return container;
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         launch(args);
     }
 }
