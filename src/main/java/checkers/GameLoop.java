@@ -52,7 +52,7 @@ public class GameLoop extends Application {
         contentHolder.setCenter(boardContainer);
         BorderPane.setMargin(contentHolder.getTop(), new Insets(5, 0, 5, 5));
 
-        rootContainer.getStylesheets().add("/checkers/menustyle.css");
+        rootContainer.getStylesheets().add("/menustyle.css");
         rootContainer.getChildren().add(contentHolder);
 
 

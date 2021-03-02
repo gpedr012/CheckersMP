@@ -179,7 +179,7 @@ public class MainMenu extends Application
     private BorderPane getUISkeleton()
     {
         BorderPane root = new BorderPane();
-        root.getStylesheets().add("checkers/menustyle.css");
+        root.getStylesheets().add("menustyle.css");
         root.setId("pane");
 
         Label title = new Label("CHECKERS");
