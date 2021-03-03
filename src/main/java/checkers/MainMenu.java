@@ -9,6 +9,7 @@ import checkers.ui.Board;
 import checkers.ui.ColorToggleMenu;
 import checkers.ui.Piece;
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
@@ -16,6 +17,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -83,38 +85,52 @@ public class MainMenu extends Application {
             Label connStatus = new Label("Connection Status: ");
             Label actualStatus = new Label();
 
-            EventLoopGroup workerGroup = new NioEventLoopGroup();
-            Bootstrap bootstrap = new Bootstrap();
-            bootstrap.group(workerGroup)
-                    .channel(NioSocketChannel.class)
-                    .handler(new ClientChannelInitializer());
 
-            ChannelFuture future = bootstrap.connect(NetworkHelper.getHost(), NetworkHelper.getPort());
-
-            future.addListener(new ChannelFutureListener() {
+            Task<Channel> connectTask = new Task<Channel>() {
                 @Override
-                public void operationComplete(ChannelFuture f) throws Exception {
+                protected Channel call() throws Exception {
+                    EventLoopGroup workerGroup = new NioEventLoopGroup();
+                    Bootstrap bootstrap = new Bootstrap();
+                    bootstrap.group(workerGroup)
+                            .channel(NioSocketChannel.class)
+                            .handler(new ClientChannelInitializer());
 
-                    if (f.isSuccess()) {
-                        assert future == f;
-                        actualStatus.setText("Connected");
-                    }
+                    ChannelFuture future = bootstrap.connect(NetworkHelper.getHost(), NetworkHelper.getPort());
+                    Channel userChannel = future.channel();
+
+                    future.sync();
+
+                    return userChannel;
+
+
 
                 }
 
+                @Override
+                protected void succeeded() {
+                    NetworkHelper.setUserChannel(getValue());
+                    actualStatus.setText("Connected");
 
-            });
+                }
+
+                @Override
+                protected void failed() {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Connection Error");
+                    alert.setHeaderText(getException().getClass().getName());
+                    alert.setContentText(getException().getMessage());
+                    alert.showAndWait();
+                }
+            };
 
 
             bottomBtn.setText("GO BACK");
             bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
 
 
-
             center.getChildren().addAll(connStatus, actualStatus, defaultBtnOne);
 
-
-
+            new Thread(connectTask).start();
 
 
         } else if (sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER) {
@@ -180,12 +196,14 @@ public class MainMenu extends Application {
         }
 
 
-        return new Scene(root, 500, 500);
+        return new
+
+                Scene(root, 500, 500);
+
     }
 
 
     private void findMatch() {
-
 
 
     }
