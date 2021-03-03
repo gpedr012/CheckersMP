@@ -1,11 +1,19 @@
 package checkers;
 
+import checkers.network.ClientChannelInitializer;
+import checkers.network.NetworkHelper;
 import checkers.player.EasyAI;
 import checkers.player.HumanPlayer;
 import checkers.player.Player;
 import checkers.ui.Board;
 import checkers.ui.ColorToggleMenu;
 import checkers.ui.Piece;
+import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
@@ -15,19 +23,16 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-public class MainMenu extends Application
-{
+public class MainMenu extends Application {
 
-    private enum SceneType
-    {
+    private enum SceneType {
         MAIN, LOCAL, ONLINE, SINGLE_PLAYER, TWO_PLAYER;
     }
 
     Stage mainStage;
 
     @Override
-    public void start(Stage stage) throws Exception
-    {
+    public void start(Stage stage) throws Exception {
         Scene mainMenuScene = setUpScene(SceneType.MAIN);
         mainStage = stage;
         stage.setScene(mainMenuScene);
@@ -36,8 +41,7 @@ public class MainMenu extends Application
 
     }
 
-    public Scene setUpScene(SceneType sceneType)
-    {
+    public Scene setUpScene(SceneType sceneType) {
         BorderPane root = getUISkeleton();
         Button defaultBtnOne = new Button();
         Button defaultBtnTwo = new Button();
@@ -52,18 +56,16 @@ public class MainMenu extends Application
 
         Button bottomBtn = (Button) root.getBottom();
 
-        if (sceneType == SceneType.MAIN)
-        {
+        if (sceneType == SceneType.MAIN) {
 
             defaultBtnOne.setText("LOCAL PLAY");
             defaultBtnTwo.setText("ONLINE PLAY");
             bottomBtn.setText("QUIT");
             defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.LOCAL)));
-            //defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
+            defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
             bottomBtn.setOnAction(event -> Platform.exit());
             center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
-        } else if (sceneType == SceneType.LOCAL)
-        {
+        } else if (sceneType == SceneType.LOCAL) {
             defaultBtnOne.setText("ONE PLAYER");
             defaultBtnTwo.setText("TWO PLAYERS");
             bottomBtn.setText("GO BACK");
@@ -72,10 +74,50 @@ public class MainMenu extends Application
             defaultBtnTwo.setOnAction(event -> changeScene(setUpScene(SceneType.TWO_PLAYER)));
             bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
             center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
-        } else if (sceneType == SceneType.ONLINE)
-        {
-        } else if (sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER)
-        {
+        } else if (sceneType == SceneType.ONLINE) {
+
+            defaultBtnOne.setText("FIND OPPONENT");
+            defaultBtnOne.setMinWidth(250);
+            defaultBtnOne.setOnAction(event -> findMatch());
+
+            Label connStatus = new Label("Connection Status: ");
+            Label actualStatus = new Label();
+
+            EventLoopGroup workerGroup = new NioEventLoopGroup();
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(workerGroup)
+                    .channel(NioSocketChannel.class)
+                    .handler(new ClientChannelInitializer());
+
+            ChannelFuture future = bootstrap.connect(NetworkHelper.getHost(), NetworkHelper.getPort());
+
+            future.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(ChannelFuture f) throws Exception {
+
+                    if (f.isSuccess()) {
+                        assert future == f;
+                        actualStatus.setText("Connected");
+                    }
+
+                }
+
+
+            });
+
+
+            bottomBtn.setText("GO BACK");
+            bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
+
+
+
+            center.getChildren().addAll(connStatus, actualStatus, defaultBtnOne);
+
+
+
+
+
+        } else if (sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER) {
 
             Label chooseColorLbl = new Label("CHOOSE A COLOR");
             Button playBtn = new Button("PLAY");
@@ -90,8 +132,7 @@ public class MainMenu extends Application
             center.getChildren().addAll(chooseColorLbl, colorSelector);
             bottomBtn.setOnAction(e -> changeScene(setUpScene(SceneType.LOCAL)));
 
-            if (sceneType == SceneType.SINGLE_PLAYER)
-            {
+            if (sceneType == SceneType.SINGLE_PLAYER) {
                 ToggleGroup difficultyToggles = new ToggleGroup();
                 ToggleButton easyToggle = new ToggleButton("EASY");
                 ToggleButton mediumToggle = new ToggleButton("MEDIUM");
@@ -114,26 +155,21 @@ public class MainMenu extends Application
 
                 playBtn.setOnAction(e ->
                 {
-                    try
-                    {
+                    try {
                         startSingleGame(((ToggleButton) difficultyToggles.getSelectedToggle()).getText().toLowerCase(), colorSelector.getSelection());
-                    } catch (Exception exception)
-                    {
+                    } catch (Exception exception) {
                         exception.printStackTrace();
                     }
                 });
 
-            } else
-            {
+            } else {
                 center.getChildren().add(playBtn);
 
                 playBtn.setOnAction(e ->
                 {
-                    try
-                    {
+                    try {
                         startTwoPlayerGame(colorSelector.getSelection());
-                    } catch (Exception exception)
-                    {
+                    } catch (Exception exception) {
                         exception.printStackTrace();
                     }
                 });
@@ -147,37 +183,39 @@ public class MainMenu extends Application
         return new Scene(root, 500, 500);
     }
 
-    private void startTwoPlayerGame(Piece.PieceColor colorSelected) throws Exception
-    {
+
+    private void findMatch() {
+
+
+
+    }
+
+    private void startTwoPlayerGame(Piece.PieceColor colorSelected) throws Exception {
         Board gameBoard = new Board();
         Piece.PieceColor playerTwoColor = colorSelected == Piece.PieceColor.DARK ? Piece.PieceColor.LIGHT : Piece.PieceColor.DARK;
         GameLoop twoPlayerGame = new GameLoop(gameBoard, new HumanPlayer(colorSelected, 1, gameBoard), new HumanPlayer(playerTwoColor, 2, gameBoard));
         twoPlayerGame.start(mainStage);
     }
 
-    private void startSingleGame(String selectedDifficulty, Piece.PieceColor selectedColor) throws Exception
-    {
+    private void startSingleGame(String selectedDifficulty, Piece.PieceColor selectedColor) throws Exception {
         Board gameBoard = new Board();
         Player playerOne = new HumanPlayer(selectedColor, 1, gameBoard);
         Piece.PieceColor AIcolor = selectedColor == Piece.PieceColor.DARK ? Piece.PieceColor.LIGHT : Piece.PieceColor.DARK;
 
-        if (selectedDifficulty.equals("easy"))
-        {
+        if (selectedDifficulty.equals("easy")) {
             Player playerTwo = new EasyAI(AIcolor, 2, gameBoard);
             GameLoop easyGame = new GameLoop(gameBoard, playerOne, playerTwo);
 
             easyGame.start(mainStage);
 
-        } else if (selectedDifficulty.equals("medium"))
-        {
+        } else if (selectedDifficulty.equals("medium")) {
 
         }
 
 
     }
 
-    private BorderPane getUISkeleton()
-    {
+    private BorderPane getUISkeleton() {
         BorderPane root = new BorderPane();
         root.getStylesheets().add("menustyle.css");
         root.setId("pane");
@@ -204,14 +242,12 @@ public class MainMenu extends Application
         return root;
     }
 
-    private void changeScene(Scene scene)
-    {
+    private void changeScene(Scene scene) {
         mainStage.setScene(scene);
     }
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         launch(args);
     }
 }
