@@ -3,7 +3,6 @@ module CheckersMP {
     requires javafx.controls;
     requires io.netty.all;
 
-    opens checkers.ui;
-    opens checkers;
+    opens checkers.client.scenes;
 
 }
