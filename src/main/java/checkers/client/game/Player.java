@@ -1,26 +1,18 @@
-package checkers.player;
+package checkers.client.game;
 
-import checkers.ui.Board;
-import checkers.ui.Piece;
-import checkers.ui.Tile;
-import javafx.animation.Timeline;
+import checkers.client.ui.Board;
+import checkers.client.ui.Piece;
+import checkers.client.ui.Tile;
 import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Predicate;
 
 public abstract class Player
 {

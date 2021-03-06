@@ -1,10 +1,11 @@
-package checkers;
+package checkers.client.scenes;
 
 
-import checkers.player.HumanPlayer;
-import checkers.player.Player;
-import checkers.ui.Board;
-import checkers.ui.Piece;
+import checkers.client.game.GameManager;
+import checkers.client.game.HumanPlayer;
+import checkers.client.game.Player;
+import checkers.client.ui.Board;
+import checkers.client.ui.Piece;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -39,7 +40,7 @@ public class GameLoop extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        checkers.GameManager gameManager = new checkers.GameManager(board, player1, player2);
+        GameManager gameManager = new GameManager(board, player1, player2);
         HBox rootContainer = new HBox();
         BorderPane contentHolder = new BorderPane();
         HBox boardContainer = new HBox(board);
@@ -75,7 +76,7 @@ public class GameLoop extends Application {
         homeBtn.setId("home-btn");
         homeBtn.setOnAction(e -> {
             try {
-                new checkers.MainMenu().start(stage);
+                new MainMenu().start(stage);
             } catch (Exception exception) {
                 exception.printStackTrace();
             }

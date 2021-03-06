@@ -1,10 +1,9 @@
-package checkers.player;
+package checkers.client.game;
 
-import checkers.ui.Board;
-import checkers.ui.Piece;
-import checkers.ui.Tile;
+import checkers.client.ui.Board;
+import checkers.client.ui.Piece;
+import checkers.client.ui.Tile;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class EasyAI extends Player

@@ -1,8 +1,8 @@
-package checkers.player;
+package checkers.client.game;
 
-import checkers.ui.Board;
-import checkers.ui.Piece;
-import checkers.ui.Tile;
+import checkers.client.ui.Board;
+import checkers.client.ui.Piece;
+import checkers.client.ui.Tile;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;

@@ -1,10 +1,9 @@
-package checkers.player;
+package checkers.client.game;
 
-import checkers.ui.Board;
-import checkers.ui.Piece;
-import checkers.ui.Tile;
+import checkers.client.ui.Board;
+import checkers.client.ui.Piece;
+import checkers.client.ui.Tile;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 

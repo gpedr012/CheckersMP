@@ -1,16 +1,13 @@
-package checkers.ui;
+package checkers.client.ui;
 
 import javafx.animation.FadeTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
-
-import java.util.Iterator;
 
 public class Tile extends StackPane
 {

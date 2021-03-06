@@ -1,17 +1,17 @@
-package checkers;
+package checkers.client.scenes;
 
-import checkers.network.ClientChannelInitializer;
-import checkers.network.NetworkHelper;
-import checkers.player.EasyAI;
-import checkers.player.HumanPlayer;
-import checkers.player.Player;
-import checkers.ui.Board;
-import checkers.ui.ColorToggleMenu;
-import checkers.ui.Piece;
+import checkers.client.network.ClientChannelInitializer;
+import checkers.networkutils.Message;
+import checkers.client.network.ClientNetworkHelper;
+import checkers.client.game.EasyAI;
+import checkers.client.game.HumanPlayer;
+import checkers.client.game.Player;
+import checkers.client.ui.Board;
+import checkers.client.ui.ColorToggleMenu;
+import checkers.client.ui.Piece;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -22,7 +22,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class MainMenu extends Application {
@@ -40,6 +43,7 @@ public class MainMenu extends Application {
         stage.setScene(mainMenuScene);
         stage.setTitle("Main Menu");
         stage.show();
+
 
     }
 
@@ -81,24 +85,32 @@ public class MainMenu extends Application {
             defaultBtnOne.setText("FIND OPPONENT");
             defaultBtnOne.setMinWidth(250);
             defaultBtnOne.setOnAction(event -> findMatch());
+            defaultBtnOne.setDisable(true);
 
             Label connStatus = new Label("Connection Status: ");
             Label actualStatus = new Label();
+
+            connStatus.setId("subtitle-label");
+            actualStatus.setId("subtitle-label");
 
 
             Task<Channel> connectTask = new Task<Channel>() {
                 @Override
                 protected Channel call() throws Exception {
                     EventLoopGroup workerGroup = new NioEventLoopGroup();
+                    ClientNetworkHelper.setEventLoopGroup(workerGroup);
+
                     Bootstrap bootstrap = new Bootstrap();
                     bootstrap.group(workerGroup)
                             .channel(NioSocketChannel.class)
                             .handler(new ClientChannelInitializer());
 
-                    ChannelFuture future = bootstrap.connect(NetworkHelper.getHost(), NetworkHelper.getPort());
+                    ChannelFuture future = bootstrap.connect(ClientNetworkHelper.getHost(), ClientNetworkHelper.getPort());
                     Channel userChannel = future.channel();
 
                     future.sync();
+
+
 
                     return userChannel;
 
@@ -108,18 +120,27 @@ public class MainMenu extends Application {
 
                 @Override
                 protected void succeeded() {
-                    NetworkHelper.setUserChannel(getValue());
+                    ClientNetworkHelper.setUserChannel(getValue());
                     actualStatus.setText("Connected");
+                    actualStatus.setTextFill(Color.GREEN);
+                    defaultBtnOne.setDisable(false);
+                    defaultBtnOne.setText("Find Match");
+                    defaultBtnOne.setOnAction(actionEvent -> findMatch());
+
 
                 }
 
                 @Override
                 protected void failed() {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Connection Error");
-                    alert.setHeaderText(getException().getClass().getName());
-                    alert.setContentText(getException().getMessage());
+                    Alert alert = Message.createConnectionErrorAlert();
                     alert.showAndWait();
+
+                    actualStatus.setText("Error");
+                    actualStatus.setTextFill(Color.RED);
+
+                    defaultBtnOne.setText("Retry");
+                    defaultBtnOne.setDisable(false);
+                    defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
                 }
             };
 
@@ -205,6 +226,7 @@ public class MainMenu extends Application {
 
     private void findMatch() {
 
+        ClientNetworkHelper.findMatch();
 
     }
 
@@ -268,4 +290,6 @@ public class MainMenu extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+
 }

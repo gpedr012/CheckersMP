@@ -1,4 +1,4 @@
-package checkers.network;
+package checkers.client.network;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

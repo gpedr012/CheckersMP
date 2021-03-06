@@ -1,4 +1,4 @@
-package checkers.ui;
+package checkers.client.ui;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

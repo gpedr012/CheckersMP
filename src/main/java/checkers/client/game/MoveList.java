@@ -1,6 +1,6 @@
-package checkers.player;
+package checkers.client.game;
 
-import checkers.ui.Tile;
+import checkers.client.ui.Tile;
 
 import java.util.ArrayList;
 import java.util.Iterator;

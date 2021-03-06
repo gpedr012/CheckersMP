@@ -1,4 +1,4 @@
-package checkers.network;
+package checkers.client.network;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -1,4 +1,4 @@
-package checkers.ui;
+package checkers.client.ui;
 
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;

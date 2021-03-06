@@ -1,14 +1,8 @@
-package checkers;
+package checkers.client.game;
 
-import checkers.player.Player;
-import checkers.ui.Board;
-import checkers.ui.Piece;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
+import checkers.client.ui.Board;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-
-import java.util.List;
 
 public class GameManager
 {

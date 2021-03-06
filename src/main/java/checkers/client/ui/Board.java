@@ -1,6 +1,6 @@
-package checkers.ui;
+package checkers.client.ui;
 
-import checkers.player.Player;
+import checkers.client.game.Player;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
