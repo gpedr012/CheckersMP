@@ -36,6 +36,14 @@ public class MainMenu extends Application {
 
     Stage mainStage;
 
+    private boolean isConnected = false;
+
+    private static Label serverMessage = new Label();
+
+    static {
+        serverMessage.setId("server-info");
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         Scene mainMenuScene = setUpScene(SceneType.MAIN);
@@ -82,10 +90,11 @@ public class MainMenu extends Application {
             center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
         } else if (sceneType == SceneType.ONLINE) {
 
+
             defaultBtnOne.setText("FIND OPPONENT");
             defaultBtnOne.setMinWidth(250);
             defaultBtnOne.setOnAction(event -> findMatch());
-            defaultBtnOne.setDisable(true);
+
 
             Label connStatus = new Label("Connection Status: ");
             Label actualStatus = new Label();
@@ -93,65 +102,74 @@ public class MainMenu extends Application {
             connStatus.setId("subtitle-label");
             actualStatus.setId("subtitle-label");
 
+            if (!isConnected) {
+                defaultBtnOne.setDisable(true);
 
-            Task<Channel> connectTask = new Task<Channel>() {
-                @Override
-                protected Channel call() throws Exception {
-                    EventLoopGroup workerGroup = new NioEventLoopGroup();
-                    ClientNetworkHelper.setEventLoopGroup(workerGroup);
+                Task<Channel> connectTask = new Task<Channel>() {
+                    @Override
+                    protected Channel call() throws Exception {
+                        EventLoopGroup workerGroup = new NioEventLoopGroup();
+                        ClientNetworkHelper.setEventLoopGroup(workerGroup);
 
-                    Bootstrap bootstrap = new Bootstrap();
-                    bootstrap.group(workerGroup)
-                            .channel(NioSocketChannel.class)
-                            .handler(new ClientChannelInitializer());
+                        Bootstrap bootstrap = new Bootstrap();
+                        bootstrap.group(workerGroup)
+                                .channel(NioSocketChannel.class)
+                                .handler(new ClientChannelInitializer());
 
-                    ChannelFuture future = bootstrap.connect(ClientNetworkHelper.getHost(), ClientNetworkHelper.getPort());
-                    Channel userChannel = future.channel();
+                        ChannelFuture future = bootstrap.connect(ClientNetworkHelper.getHost(), ClientNetworkHelper.getPort());
+                        Channel userChannel = future.channel();
 
-                    future.sync();
+                        future.sync();
 
+                        return userChannel;
 
+                    }
 
-                    return userChannel;
-
-
-
-                }
-
-                @Override
-                protected void succeeded() {
-                    ClientNetworkHelper.setUserChannel(getValue());
-                    actualStatus.setText("Connected");
-                    actualStatus.setTextFill(Color.GREEN);
-                    defaultBtnOne.setDisable(false);
-                    defaultBtnOne.setText("Find Match");
-                    defaultBtnOne.setOnAction(actionEvent -> findMatch());
+                    @Override
+                    protected void succeeded() {
+                        ClientNetworkHelper.setUserChannel(getValue());
+                        actualStatus.setText("Connected");
+                        actualStatus.setTextFill(Color.GREEN);
+                        defaultBtnOne.setDisable(false);
+                        defaultBtnOne.setText("Find Match");
+                        System.out.println(actualStatus.getTextFill().toString());
+                        isConnected = true;
 
 
-                }
+                    }
 
-                @Override
-                protected void failed() {
-                    Alert alert = Message.createConnectionErrorAlert();
-                    alert.showAndWait();
+                    @Override
+                    protected void failed() {
+                        Alert alert = Message.createConnectionErrorAlert();
+                        alert.showAndWait();
 
-                    actualStatus.setText("Error");
-                    actualStatus.setTextFill(Color.RED);
+                        actualStatus.setText("Error");
+                        actualStatus.setTextFill(Color.RED);
 
-                    defaultBtnOne.setText("Retry");
-                    defaultBtnOne.setDisable(false);
-                    defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
-                }
-            };
+                        defaultBtnOne.setText("Retry");
+                        defaultBtnOne.setDisable(false);
+                        defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
+                    }
+                };
 
+                new Thread(connectTask).start();
+            }
+
+            if(isConnected){
+                actualStatus.setText("Connected");
+                actualStatus.setTextFill(Color.GREEN);
+                defaultBtnOne.setDisable(false);
+                defaultBtnOne.setText("Find Match");
+                System.out.println(actualStatus.getId());
+                System.out.println(actualStatus.getTextFill().toString());
+                System.out.println(connStatus.getTextFill().toString());
+            }
 
             bottomBtn.setText("GO BACK");
             bottomBtn.setOnAction(event -> changeScene(setUpScene(SceneType.MAIN)));
 
 
-            center.getChildren().addAll(connStatus, actualStatus, defaultBtnOne);
-
-            new Thread(connectTask).start();
+            center.getChildren().addAll(connStatus, actualStatus, defaultBtnOne, serverMessage);
 
 
         } else if (sceneType == SceneType.SINGLE_PLAYER || sceneType == SceneType.TWO_PLAYER) {
@@ -286,6 +304,11 @@ public class MainMenu extends Application {
         mainStage.setScene(scene);
     }
 
+    public static void showServerMsg(String content) {
+
+        serverMessage.setText(content);
+
+    }
 
     public static void main(String[] args) {
         launch(args);
