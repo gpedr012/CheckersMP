@@ -20,6 +20,13 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<String> {
         switch (action) {
             case SERVER_INFO:
                 Platform.runLater(() -> MainMenu.showServerMsg(msg));
+                break;
+            case FIND_MATCH:
+                Platform.runLater(() -> MainMenu.setIsFindingMatch(true));
+                break;
+            case CANCEL_MM:
+                Platform.runLater(() -> MainMenu.setIsFindingMatch(false));
+                break;
         }
     }
 

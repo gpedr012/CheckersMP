@@ -17,6 +17,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -36,7 +39,8 @@ public class MainMenu extends Application {
 
     Stage mainStage;
 
-    private boolean isConnected = false;
+    private static boolean isConnected = false;
+    private static BooleanProperty isFindingMatch = new SimpleBooleanProperty(false);
 
     private static Label serverMessage = new Label();
 
@@ -90,10 +94,25 @@ public class MainMenu extends Application {
             center.getChildren().addAll(defaultBtnOne, defaultBtnTwo);
         } else if (sceneType == SceneType.ONLINE) {
 
-
-            defaultBtnOne.setText("FIND OPPONENT");
+            serverMessage.setText("");
             defaultBtnOne.setMinWidth(250);
             defaultBtnOne.setOnAction(event -> findMatch());
+            defaultBtnOne.textProperty().bind(new ObjectBinding<String>() {
+
+                {
+                    super.bind(isFindingMatchProperty());
+                }
+
+                @Override
+                protected String computeValue() {
+                    if(isFindingMatch.get()) {
+                        return "Cancel Matchmaking";
+                    } else {
+                        defaultBtnOne.setMinWidth(290);
+                        return "Find Match";
+                    }
+                }
+            });
 
 
             Label connStatus = new Label("Connection Status: ");
@@ -131,7 +150,6 @@ public class MainMenu extends Application {
                         actualStatus.setText("Connected");
                         actualStatus.setTextFill(Color.GREEN);
                         defaultBtnOne.setDisable(false);
-                        defaultBtnOne.setText("Find Match");
                         System.out.println(actualStatus.getTextFill().toString());
                         isConnected = true;
 
@@ -145,8 +163,6 @@ public class MainMenu extends Application {
 
                         actualStatus.setText("Error");
                         actualStatus.setTextFill(Color.RED);
-
-                        defaultBtnOne.setText("Retry");
                         defaultBtnOne.setDisable(false);
                         defaultBtnOne.setOnAction(event -> changeScene(setUpScene(SceneType.ONLINE)));
                     }
@@ -159,7 +175,6 @@ public class MainMenu extends Application {
                 actualStatus.setText("Connected");
                 actualStatus.setTextFill(Color.GREEN);
                 defaultBtnOne.setDisable(false);
-                defaultBtnOne.setText("Find Match");
                 System.out.println(actualStatus.getId());
                 System.out.println(actualStatus.getTextFill().toString());
                 System.out.println(connStatus.getTextFill().toString());
@@ -244,7 +259,14 @@ public class MainMenu extends Application {
 
     private void findMatch() {
 
-        ClientNetworkHelper.findMatch();
+        if(isFindingMatch.get()) {
+            ClientNetworkHelper.cancelMatchMaking();
+
+        } else {
+            ClientNetworkHelper.findMatch();
+        }
+
+
 
     }
 
@@ -271,6 +293,18 @@ public class MainMenu extends Application {
         }
 
 
+    }
+
+    public static boolean getIsFindingMatch() {
+        return isFindingMatch.get();
+    }
+
+    public static BooleanProperty isFindingMatchProperty() {
+        return isFindingMatch;
+    }
+
+    public static void setIsFindingMatch(boolean isFindingMatch) {
+        MainMenu.isFindingMatch.set(isFindingMatch);
     }
 
     private BorderPane getUISkeleton() {

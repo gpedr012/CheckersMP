@@ -56,6 +56,10 @@ public class ClientNetworkHelper {
 
     }
 
+    public static void cancelMatchMaking() {
+        sendMessage(Message.cancelMatchMakingMsg());
+    }
+
     private static void sendMessage(String s) {
         Task<Void> sendMsgTask = new Task<>() {
             @Override

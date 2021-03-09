@@ -16,7 +16,7 @@ import java.util.Queue;
 public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
     private Parser parser = new Parser();
-    private Queue<Channel> channelQueue = new PriorityQueue<>();
+    private List<Channel> channelQueue = new ArrayList<>();
     private List<Match> matchList = new ArrayList<>();
 
     @Override
@@ -35,9 +35,10 @@ public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
                 if(channelQueue.isEmpty()) {
                     channelQueue.add(channelHandlerContext.channel());
-                    channelHandlerContext.writeAndFlush(Message.createServerInfoMsg("You have been added to the queue"));
+                    channelHandlerContext.writeAndFlush(Message.createFindMatchMsg() +  Message.createServerInfoMsg("You have been added to the queue"));
 
                 } else if (channelQueue.contains(channelHandlerContext.channel())) {
+
                     channelHandlerContext.writeAndFlush(Message.createServerInfoMsg("You are already in the queue"));
 
                 } else {
@@ -45,6 +46,12 @@ public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
                 }
 
                 break;
+
+            case CANCEL_MM:
+                Channel channel = channelHandlerContext.channel();
+                if(channelQueue.remove(channel)) {
+                    channel.writeAndFlush(Message.cancelMatchMakingMsg() + Message.createServerInfoMsg("You have been removed from the queue."));
+                }
         }
 
 
