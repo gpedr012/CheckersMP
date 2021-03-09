@@ -1,42 +1,46 @@
-#home-btn
-{
+#home-btn {
     -fx-background-image: url("/homebtn.png");
     -fx-background-position: center;
-    -fx-background-size: auto ;
+    -fx-background-size: auto;
     -fx-background-repeat: no-repeat;
 
 }
 
 
-#pane
-{
+#pane {
     -fx-background-image: url("/mainbg.jpg");
     -fx-background-size: 500 500;
     -fx-background-repeat: repeat;
     -fx-background-position: top center;
 }
-#title-label
-{
+
+#title-label {
     -fx-font-size: 85px;
     -fx-font-family: "Garamond";
     -fx-text-fill: red;
     -fx-effect: dropshadow(three-pass-box, #6f0606, 5, 0.66, 0, 0);
 }
-#subtitle-label
-{
+
+#subtitle-label {
     -fx-font-family: Georgia;
     -fx-font-size: 20;
     -fx-text-fill: black;
     -fx-font-weight: bold;
 }
 
-#accept-btn
-{
+#server-info {
+    -fx-font-family: Georgia;
+    -fx-font-size: 16;
+    -fx-text-fill: blue;
+    -fx-font-weight: bold;
+}
+
+#accept-btn {
     -fx-effect: dropshadow(three-pass-box, #276873, 20, 0.50, 0, 0);
     -fx-background-color: #599bb3;
-    -fx-background-radius: 5,5,5,5;
-    -fx-background-insets: 2,2,2,2;
-    -fx-border-radius: 5,5,5,5;
+    -fx-background-radius: 5, 5, 5, 5;
+    -fx-background-insets: 2, 2, 2, 2;
+    -fx-border-radius: 5, 5, 5, 5;
     -fx-border-style: solid;
     -fx-border-color: #29668f;
     -fx-border-width: 5px;
@@ -47,25 +51,24 @@
 
 
 }
-#accept-btn:hover
-{
+
+#accept-btn:hover {
     -fx-background-color: #3c7e93;
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 
 }
 
-#accept-btn:selected
-{
+#accept-btn:selected {
     -fx-border-color: white;
 }
-#cancel-btn
-{
+
+#cancel-btn {
     -fx-effect: dropshadow(three-pass-box, #862b2b, 20, 0.50, 0, 0);
     -fx-background-color: #e01616;
-    -fx-background-radius: 5,5,5,5;
-    -fx-background-insets: 2,2,2,2;
-    -fx-border-radius: 5,5,5,5;
+    -fx-background-radius: 5, 5, 5, 5;
+    -fx-background-insets: 2, 2, 2, 2;
+    -fx-border-radius: 5, 5, 5, 5;
     -fx-border-style: solid;
     -fx-border-color: #8f2929;
     -fx-border-width: 5px;
@@ -76,15 +79,14 @@
 
 
 }
-#cancel-btn:hover
-{
+
+#cancel-btn:hover {
     -fx-background-color: #933c3c;
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 }
 
-#sethover:hover
-{
+#sethover:hover {
     -fx-cursor: hand;
     -fx-highlight-fill: white;
 }
