@@ -14,6 +14,8 @@ public class Parser {
 
             if (msg.equals(Message.FIND_MATCH_MSG)) {
                 return Action.FIND_MATCH;
+            } else if (msg.equals(Message.CANCEL_MATCH_MSG)) {
+                return Action.CANCEL_MM;
             }
         } else if (msg.startsWith(Message.SERVER_INFO_MSG_PREFIX)) {
             return Action.SERVER_INFO;

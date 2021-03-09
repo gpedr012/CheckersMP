@@ -6,8 +6,10 @@ public class Message {
 
     public static final String PLAYER_MSG_PREFIX = "[PLAYER]";
     public static final String SERVER_INFO_MSG_PREFIX = "[SERVER_INFO]";
+    public static final String INTERNAL_SERVER_MSG_PREFIX = "[INTERNAL]";
 
     public static final String FIND_MATCH_MSG = "queue";
+    public static final String CANCEL_MATCH_MSG = "cancel_queue";
 
     public static final String MSG_DELIMITER = "\n";
     public static final String MSG_CONTENT_DELIMITER = ":";
@@ -16,7 +18,7 @@ public class Message {
 
     public static String createFindMatchMsg() {
 
-        return PLAYER_MSG_PREFIX + MSG_CONTENT_DELIMITER + FIND_MATCH_MSG + MSG_DELIMITER;
+        return formatMessage(PLAYER_MSG_PREFIX, FIND_MATCH_MSG);
 
     }
 
@@ -29,7 +31,24 @@ public class Message {
     }
 
     public static String createServerInfoMsg(String content) {
-        return SERVER_INFO_MSG_PREFIX + MSG_CONTENT_DELIMITER + content + MSG_DELIMITER;
+
+        return formatMessage(SERVER_INFO_MSG_PREFIX, content);
+
+    }
+
+    public static String createInternalServerMsg(String content) {
+        return formatMessage(INTERNAL_SERVER_MSG_PREFIX, content);
+    }
+
+    public static String cancelMatchMakingMsg() {
+
+        return formatMessage(PLAYER_MSG_PREFIX, CANCEL_MATCH_MSG);
+
+    }
+
+    private static String formatMessage(String header, String content) {
+
+        return header + MSG_CONTENT_DELIMITER + content + MSG_DELIMITER;
 
     }
 
