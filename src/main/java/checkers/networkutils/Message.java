@@ -1,5 +1,6 @@
 package checkers.networkutils;
 
+import javafx.css.Match;
 import javafx.scene.control.Alert;
 
 public class Message {
@@ -10,6 +11,7 @@ public class Message {
 
     public static final String FIND_MATCH_MSG = "queue";
     public static final String CANCEL_MATCH_MSG = "cancel_queue";
+    public static final String MATCH_FOUND_MSG = "match=";
 
     public static final String MSG_DELIMITER = "\n";
     public static final String MSG_CONTENT_DELIMITER = ":";
@@ -34,6 +36,10 @@ public class Message {
 
         return formatMessage(SERVER_INFO_MSG_PREFIX, content);
 
+    }
+
+    public static String createMatchFoundMsg(int matchId, int colorId) {
+        return formatMessage(INTERNAL_SERVER_MSG_PREFIX, MATCH_FOUND_MSG + String.format("%d,%d", matchId,  colorId));
     }
 
     public static String createInternalServerMsg(String content) {
