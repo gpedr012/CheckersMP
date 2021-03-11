@@ -16,6 +16,8 @@ import java.util.Iterator;
 public class HumanPlayer extends Player
 {
     private final Logic logic = new Logic();
+    private boolean isOnline = false;
+    private int matchId = 0;
 
     public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board)
     {
@@ -24,6 +26,14 @@ public class HumanPlayer extends Player
 
     }
 
+    public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board, int matchId)
+    {
+        super(playerColor, playerNumber, board);
+        this.matchId = matchId;
+        isOnline = true;
+        initLogic();
+
+    }
 
     @Override
     public void processTurn()
@@ -137,6 +147,10 @@ public class HumanPlayer extends Player
                     playMovementAnimation(currentTile, newTile);
 
                     newTile.highlightTile(false);
+
+                    if(isOnline) {
+
+                    }
                 }
             };
 
