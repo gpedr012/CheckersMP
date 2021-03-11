@@ -14,6 +14,7 @@ public class ClientNetworkHelper {
     private static Channel userChannel = null;
     private static boolean isConnected = false;
     private static EventLoopGroup eventLoopGroup;
+    private static int matchId = -1;
 
     private ClientNetworkHelper(){}
 
@@ -77,5 +78,13 @@ public class ClientNetworkHelper {
         };
 
         new Thread(sendMsgTask).start();
+    }
+
+    public static int getMatchId() {
+        return matchId;
+    }
+
+    public static void setMatchId(int matchId) {
+        ClientNetworkHelper.matchId = matchId;
     }
 }

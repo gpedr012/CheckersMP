@@ -1,5 +1,6 @@
 package checkers.client.scenes;
 
+import checkers.client.game.OnlineOpponent;
 import checkers.client.network.ClientChannelInitializer;
 import checkers.networkutils.Message;
 import checkers.client.network.ClientNetworkHelper;
@@ -37,7 +38,7 @@ public class MainMenu extends Application {
         MAIN, LOCAL, ONLINE, SINGLE_PLAYER, TWO_PLAYER;
     }
 
-    Stage mainStage;
+    static Stage mainStage;
 
     private static boolean isConnected = false;
     private static BooleanProperty isFindingMatch = new SimpleBooleanProperty(false);
@@ -259,7 +260,7 @@ public class MainMenu extends Application {
 
     private void findMatch() {
 
-        if(isFindingMatch.get()) {
+        if(getIsFindingMatch()) {
             ClientNetworkHelper.cancelMatchMaking();
 
         } else {
@@ -290,6 +291,24 @@ public class MainMenu extends Application {
 
         } else if (selectedDifficulty.equals("medium")) {
 
+        }
+
+
+    }
+
+    public static void startOnlineGame(int matchId, Piece.PieceColor playerColor)  {
+        Board gameBoard = new Board();
+        Piece.PieceColor opponentColor = playerColor == Piece.PieceColor.DARK ? Piece.PieceColor.LIGHT : Piece.PieceColor.DARK;
+
+        Player player = new HumanPlayer(playerColor, 1, gameBoard, matchId);
+        Player onlineOpponent = new OnlineOpponent(opponentColor, 2, gameBoard);
+
+        GameLoop onlineGame = new GameLoop(gameBoard, player, onlineOpponent);
+
+        try {
+            onlineGame.start(mainStage);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 
