@@ -16,8 +16,9 @@ import java.util.Queue;
 public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
     private Parser parser = new Parser();
-    private List<Channel> channelQueue = new ArrayList<>();
-    private List<Match> matchList = new ArrayList<>();
+    private static List<Channel> channelQueue = new ArrayList<>();
+    private static List<Match> matchList = new ArrayList<>();
+    private static int matchIdCtr = 0;
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
@@ -30,19 +31,23 @@ public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
         Action action = parser.parseMessage(s);
 
-        switch (action) {
+        switch (action.getType()) {
             case FIND_MATCH:
 
                 if(channelQueue.isEmpty()) {
                     channelQueue.add(channelHandlerContext.channel());
-                    channelHandlerContext.writeAndFlush(Message.createFindMatchMsg() +  Message.createServerInfoMsg("You have been added to the queue"));
-
-                } else if (channelQueue.contains(channelHandlerContext.channel())) {
-
-                    channelHandlerContext.writeAndFlush(Message.createServerInfoMsg("You are already in the queue"));
+                    channelHandlerContext.writeAndFlush(Message.createFindMatchMsg() +  Message.createServerInfoMsg("You have been added to the queue")).sync();
 
                 } else {
+                    Channel opponentChannel = channelQueue.remove(0);
+                    Channel senderChannel = channelHandlerContext.channel();
 
+                    opponentChannel.writeAndFlush(Message.createMatchFoundMsg(matchIdCtr, 0)).sync();
+                    senderChannel.writeAndFlush(Message.createMatchFoundMsg(matchIdCtr, 1)).sync();
+
+                    matchIdCtr++;
+
+                    //TODO: create internal match representation.
                 }
 
                 break;
