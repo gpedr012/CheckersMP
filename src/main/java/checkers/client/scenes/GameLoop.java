@@ -25,6 +25,8 @@ public class GameLoop extends Application {
     Scene scene;
     Stage stage;
 
+    private boolean isOnlineGame = false;
+
     public GameLoop() {
         this.board = new Board();
         this.player1 = new HumanPlayer(Piece.PieceColor.DARK, 1, board);
@@ -85,6 +87,14 @@ public class GameLoop extends Application {
         container.getChildren().add(homeBtn);
 
         return container;
+    }
+
+    public boolean isOnlineGame() {
+        return isOnlineGame;
+    }
+
+    public void setOnlineGame(boolean onlineGame) {
+        isOnlineGame = onlineGame;
     }
 
     public static void main(String[] args) {

@@ -1,5 +1,6 @@
 package checkers.client.game;
 
+import checkers.client.network.ClientNetworkHelper;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
 import checkers.client.ui.Tile;
@@ -184,7 +185,15 @@ public abstract class Player
         if(piece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
         {
             piece.getPossibleMoves().getOpponentTile().eliminatePiece();
+            if(ClientNetworkHelper.isInOnlineGame()) {
+                Tile enemyTile = piece.getPossibleMoves().getOpponentTile();
+
+                ClientNetworkHelper.addToBuffer(String.format("-%d-%d", enemyTile.getRow(), enemyTile.getCol()));
+
+            }
         }
+
+
         if((destination.getRow() == 0 || destination.getRow() == 7) && !piece.isCrowned())
             piece.setCrowned(true);
 

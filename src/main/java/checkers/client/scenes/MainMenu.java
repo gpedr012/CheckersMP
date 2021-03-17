@@ -40,7 +40,6 @@ public class MainMenu extends Application {
 
     static Stage mainStage;
 
-    private static boolean isConnected = false;
     private static BooleanProperty isFindingMatch = new SimpleBooleanProperty(false);
 
     private static Label serverMessage = new Label();
@@ -106,7 +105,7 @@ public class MainMenu extends Application {
 
                 @Override
                 protected String computeValue() {
-                    if(isFindingMatch.get()) {
+                    if (isFindingMatch.get()) {
                         return "Cancel Matchmaking";
                     } else {
                         defaultBtnOne.setMinWidth(290);
@@ -122,7 +121,7 @@ public class MainMenu extends Application {
             connStatus.setId("subtitle-label");
             actualStatus.setId("subtitle-label");
 
-            if (!isConnected) {
+            if (!ClientNetworkHelper.isConnected()) {
                 defaultBtnOne.setDisable(true);
 
                 Task<Channel> connectTask = new Task<Channel>() {
@@ -152,7 +151,7 @@ public class MainMenu extends Application {
                         actualStatus.setTextFill(Color.GREEN);
                         defaultBtnOne.setDisable(false);
                         System.out.println(actualStatus.getTextFill().toString());
-                        isConnected = true;
+                        ClientNetworkHelper.setIsConnected(true);
 
 
                     }
@@ -172,7 +171,7 @@ public class MainMenu extends Application {
                 new Thread(connectTask).start();
             }
 
-            if(isConnected){
+            if (ClientNetworkHelper.isConnected()) {
                 actualStatus.setText("Connected");
                 actualStatus.setTextFill(Color.GREEN);
                 defaultBtnOne.setDisable(false);
@@ -246,27 +245,20 @@ public class MainMenu extends Application {
                 });
 
             }
-
-
         }
 
-
-        return new
-
-                Scene(root, 500, 500);
-
+        return new Scene(root, 500, 500);
     }
 
 
     private void findMatch() {
 
-        if(getIsFindingMatch()) {
+        if (getIsFindingMatch()) {
             ClientNetworkHelper.cancelMatchMaking();
 
         } else {
             ClientNetworkHelper.findMatch();
         }
-
 
 
     }
@@ -296,11 +288,13 @@ public class MainMenu extends Application {
 
     }
 
-    public static void startOnlineGame(int matchId, Piece.PieceColor playerColor)  {
+    public static void startOnlineGame(int matchId, Piece.PieceColor playerColor) {
         Board gameBoard = new Board();
         Piece.PieceColor opponentColor = playerColor == Piece.PieceColor.DARK ? Piece.PieceColor.LIGHT : Piece.PieceColor.DARK;
+        ClientNetworkHelper.setMatchId(matchId);
+        ClientNetworkHelper.setIsInOnlineGame(true);
 
-        Player player = new HumanPlayer(playerColor, 1, gameBoard, matchId);
+        Player player = new HumanPlayer(playerColor, 1, gameBoard);
         Player onlineOpponent = new OnlineOpponent(opponentColor, 2, gameBoard);
 
         GameLoop onlineGame = new GameLoop(gameBoard, player, onlineOpponent);

@@ -1,8 +1,10 @@
 package checkers.client.game;
 
+import checkers.client.network.ClientNetworkHelper;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
 import checkers.client.ui.Tile;
+import checkers.networkutils.Message;
 import javafx.beans.binding.ObjectBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,8 +18,6 @@ import java.util.Iterator;
 public class HumanPlayer extends Player
 {
     private final Logic logic = new Logic();
-    private boolean isOnline = false;
-    private int matchId = 0;
 
     public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board)
     {
@@ -26,14 +26,6 @@ public class HumanPlayer extends Player
 
     }
 
-    public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board, int matchId)
-    {
-        super(playerColor, playerNumber, board);
-        this.matchId = matchId;
-        isOnline = true;
-        initLogic();
-
-    }
 
     @Override
     public void processTurn()
@@ -57,6 +49,11 @@ public class HumanPlayer extends Player
 
         }
         setHighLightTiles(false, selectedPiece.get());
+
+        if(ClientNetworkHelper.isInOnlineGame()) {
+            ClientNetworkHelper.flushBufferToServer();
+
+        }
 
     }
 
@@ -142,15 +139,23 @@ public class HumanPlayer extends Player
                 {
                     Piece currentPiece = selectedPiece.get();
                     Tile currentTile = getBoard().getTile(currentPiece.getRow(), currentPiece.getCol());
-                    Tile newTile = (Tile)mouseEvent.getSource();
+                    Tile destinationTile = (Tile)mouseEvent.getSource();
 
-                    playMovementAnimation(currentTile, newTile);
 
-                    newTile.highlightTile(false);
+                    if(ClientNetworkHelper.isInOnlineGame()) {
+                        int matchId = ClientNetworkHelper.getMatchId();
+                        int rowOrigin = currentTile.getRow();
+                        int colOrigin = currentTile.getCol();
+                        int rowDest = destinationTile.getRow();
+                        int colDest = destinationTile.getCol();
 
-                    if(isOnline) {
-
+                        ClientNetworkHelper.addToBuffer(Message.createMatchMoveMsg(matchId, rowOrigin, colOrigin, rowDest, colDest));
                     }
+
+                    playMovementAnimation(currentTile, destinationTile);
+
+                    destinationTile.highlightTile(false);
+
                 }
             };
 
