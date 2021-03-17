@@ -8,24 +8,22 @@ public class Action {
         FIND_MATCH,
         CANCEL_MM,
         SERVER_INFO,
-        FOUND_MATCH
+        FOUND_MATCH,
+        HAS_TURN,
+        MOVE_NO_ELIM,
+        MOVE_ELIM
     }
 
     private final Type type;
     private int[] args;
-    private int argCtr = 0;
 
     public Action(Type type) {
         this.type = type;
     }
 
-    public Action(Type type, int ... args) {
+    public Action(Type type, int[] args) {
         this(type);
-        this.args = new int[args.length];
-        for (int arg :
-                args) {
-            this.args[argCtr++] = arg;
-        }
+        this.args = args;
     }
 
     public Type getType() {
@@ -34,5 +32,10 @@ public class Action {
 
     public int getArg(int idx) {
         return args[idx];
+    }
+
+    public int[] getAllArgs() {
+        return args;
+
     }
 }
