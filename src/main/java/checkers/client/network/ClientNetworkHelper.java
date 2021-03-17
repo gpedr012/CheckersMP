@@ -13,8 +13,10 @@ public class ClientNetworkHelper {
     public final static int PORT = 8095;
     private static Channel userChannel = null;
     private static boolean isConnected = false;
+    private static boolean isInOnlineGame = false;
     private static EventLoopGroup eventLoopGroup;
     private static int matchId = -1;
+    private static StringBuilder buffer;
 
     private ClientNetworkHelper(){}
 
@@ -51,14 +53,13 @@ public class ClientNetworkHelper {
     }
 
     public static void findMatch() {
-
         sendMessage(Message.createFindMatchMsg());
-
 
     }
 
     public static void cancelMatchMaking() {
-        sendMessage(Message.cancelMatchMakingMsg());
+
+        sendMessage(Message.createCancelMatchMakingMsg());
     }
 
     private static void sendMessage(String s) {
@@ -80,8 +81,34 @@ public class ClientNetworkHelper {
         new Thread(sendMsgTask).start();
     }
 
+    public static void addToBuffer(String s ) {
+        buffer.append(s);
+
+    }
+
+
+    public static void flushBufferToServer() {
+        sendMessage(buffer.toString());
+        buffer.setLength(0);
+
+    }
+
+
+
     public static int getMatchId() {
         return matchId;
+    }
+
+    public static boolean isInOnlineGame() {
+        return isInOnlineGame;
+    }
+
+    public static void setIsConnected(boolean isConnected) {
+        ClientNetworkHelper.isConnected = isConnected;
+    }
+
+    public static void setIsInOnlineGame(boolean isInOnlineGame) {
+        ClientNetworkHelper.isInOnlineGame = isInOnlineGame;
     }
 
     public static void setMatchId(int matchId) {
