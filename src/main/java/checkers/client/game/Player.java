@@ -1,6 +1,7 @@
 package checkers.client.game;
 
 import checkers.client.network.ClientNetworkHelper;
+import checkers.client.ui.Animator;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
 import checkers.client.ui.Tile;
@@ -150,7 +151,6 @@ public abstract class Player
 
     }
 
-
     public Piece getPiece(int index)
     {
         return piecesList.get(index);
@@ -163,62 +163,7 @@ public abstract class Player
 
     protected void playMovementAnimation(Tile currentTile, Tile destinationTile)
     {
-        Piece piece = currentTile.getPiece();
-
-        Bounds currentPosition = currentTile.localToParent(currentTile.getBoundsInLocal());
-        Bounds destinationPosition = destinationTile.localToParent(destinationTile.getBoundsInLocal());
-
-        TranslateTransition animation = createTranslateTransition(piece, currentPosition, destinationPosition);
-        currentTile.removePiece();
-        board.getChildren().add(piece);
-        animation.play();
-        animation.setOnFinished(event -> finishAnimation(piece, destinationTile));
+        Animator.playMovementAnimation(this, board, currentTile, destinationTile);
 
     }
-
-    private void finishAnimation(Piece piece, Tile destination)
-    {
-        board.getChildren().remove(piece);
-        destination.addPiece(piece);
-        piece.setTranslateX(0);
-        piece.setTranslateY(0);
-        if(piece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
-        {
-            piece.getPossibleMoves().getOpponentTile().eliminatePiece();
-            if(ClientNetworkHelper.isInOnlineGame()) {
-                Tile enemyTile = piece.getPossibleMoves().getOpponentTile();
-
-                ClientNetworkHelper.addToBuffer(String.format("-%d-%d", enemyTile.getRow(), enemyTile.getCol()));
-
-            }
-        }
-
-
-        if((destination.getRow() == 0 || destination.getRow() == 7) && !piece.isCrowned())
-            piece.setCrowned(true);
-
-        piece.setRow(destination.getRow());
-        piece.setCol(destination.getCol());
-
-        endTurn();
-        System.out.println("finished animation.");
-
-    }
-
-    private TranslateTransition createTranslateTransition(Piece pieceToAnimate, Bounds currentPosition, Bounds destinationPosition)
-    {
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pieceToAnimate);
-        double offset = Tile.SIDE_LENGTH / 2d;
-
-        transition.setFromX(currentPosition.getCenterX() - offset);
-        transition.setFromY(currentPosition.getCenterY() - offset);
-
-        transition.setToX(destinationPosition.getCenterX() - offset);
-        transition.setToY(destinationPosition.getCenterY() - offset);
-
-        return transition;
-
-    }
-
-
 }
