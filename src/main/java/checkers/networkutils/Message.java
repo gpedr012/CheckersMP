@@ -21,6 +21,14 @@ public class Message {
     //row3 col3 may be empty if no enemy piece was eliminated.
     public static final String MATCH_MOVE_MSG = "matchMove=";
 
+    public static final int MATCH_ID_IDX = 0;
+    public static final int ROW_ORIGIN_IDX = 1;
+    public static final int COL_ORIGIN_IDX = 2;
+    public static final int ROW_DEST_IDX = 3;
+    public static final int COL_DEST_IDX = 4;
+    public static final int ROW_ELIM_IDX = 5;
+    public static final int COL_ELIM_IDX = 6;
+
     public static final String MSG_DELIMITER = "\n";
     public static final String MSG_CONTENT_DELIMITER = ":";
 

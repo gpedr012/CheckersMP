@@ -25,17 +25,17 @@ public class CheckersMatch {
     public void advance(Channel initiator, Action.Type type, int[] args) throws InterruptedException {
         convertRowAndCol(args);
 
-        int rowOrigin = args[1];
-        int colOrigin = args[2];
-        int rowDest = args[3];
-        int colDest = args[4];
+        int rowOrigin = args[Message.ROW_ORIGIN_IDX];
+        int colOrigin = args[Message.COL_ORIGIN_IDX];
+        int rowDest = args[Message.ROW_DEST_IDX];
+        int colDest = args[Message.COL_DEST_IDX];
 
         StringBuffer msg = new StringBuffer();
         msg.append(Message.createMatchMoveMsg(-1, rowOrigin, colOrigin, rowDest, colDest));
 
         if(type == Action.Type.MOVE_ELIM) {
-            int enemyRow = args[5];
-            int enemyCol = args[6];
+            int enemyRow = args[Message.ROW_ELIM_IDX];
+            int enemyCol = args[Message.COL_ELIM_IDX];
 
             msg.append(String.format("-%d-%d", enemyRow, enemyCol));
 
