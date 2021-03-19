@@ -1,5 +1,6 @@
 package checkers.client.network;
 
+import checkers.client.game.OnlineGameManager;
 import checkers.client.scenes.MainMenu;
 import checkers.client.ui.Piece;
 import checkers.networkutils.Action;
@@ -33,7 +34,7 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<String> {
             case FOUND_MATCH:
                 Piece.PieceColor playerColor;
 
-                switch(action.getArg(1)) {
+                switch (action.getArg(1)) {
                     case 0:
                         playerColor = Piece.PieceColor.DARK;
                         break;
@@ -44,6 +45,15 @@ public class ClientChannelHandler extends SimpleChannelInboundHandler<String> {
                         throw new Exception("Unrecognized color ID");
                 }
                 Platform.runLater(() -> MainMenu.startOnlineGame(action.getArg(0), playerColor));
+                break;
+
+            case HAS_TURN:
+                Platform.runLater(OnlineGameManager::processPlayerTurn);
+                break;
+
+            case MOVE_NO_ELIM:
+            case MOVE_ELIM:
+                Platform.runLater(() -> OnlineGameManager.processEnemyTurn(action));
                 break;
 
             default:

@@ -31,7 +31,7 @@ public class CheckersMatch {
         int colDest = args[Message.COL_DEST_IDX];
 
         StringBuffer msg = new StringBuffer();
-        msg.append(Message.createMatchMoveMsg(-1, rowOrigin, colOrigin, rowDest, colDest));
+        msg.append(Message.createMatchMoveMsg(0, rowOrigin, colOrigin, rowDest, colDest));
 
         if(type == Action.Type.MOVE_ELIM) {
             int enemyRow = args[Message.ROW_ELIM_IDX];
@@ -44,9 +44,11 @@ public class CheckersMatch {
 
         if(initiator == playerOne) {
             playerTwo.writeAndFlush(msg).sync();
+            playerTwo.writeAndFlush(Message.createHasTurnMsg()).sync();
 
         } else {
             playerOne.writeAndFlush(msg).sync();
+            playerOne.writeAndFlush(Message.createHasTurnMsg()).sync();
         }
     }
 
@@ -55,7 +57,7 @@ public class CheckersMatch {
     private void convertRowAndCol(int[] args) {
         final int MAX = 7; // max row & max col = 7.
 
-        for (int i = 1; i <= args.length; i++) {
+        for (int i = 1; i < args.length; i++) {
             args[i] = MAX - args[i];
         }
 

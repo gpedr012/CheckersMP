@@ -61,7 +61,7 @@ public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
             case MOVE_ELIM:
             case MOVE_NO_ELIM:
-                matchList.get(action.getArg(0)).advance(channelHandlerContext.channel(), action.getType(),action.getAllArgs());
+                matchList.get(action.getArg(Message.MATCH_ID_IDX)).advance(channelHandlerContext.channel(), action.getType(),action.getAllArgs());
 
                 break;
 

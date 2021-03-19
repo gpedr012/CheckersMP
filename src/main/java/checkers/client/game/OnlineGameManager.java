@@ -16,6 +16,7 @@ public class OnlineGameManager
 
 
     public static void processPlayerTurn() {
+        player.setHasTurn(true);
         player.processTurn();
 
     }
@@ -49,6 +50,5 @@ public class OnlineGameManager
             Animator.playMovementAnimation(board, currentTile, destinationTile);
 
         }
-
     }
 }

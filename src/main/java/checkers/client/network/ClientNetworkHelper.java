@@ -16,7 +16,7 @@ public class ClientNetworkHelper {
     private static boolean isInOnlineGame = false;
     private static EventLoopGroup eventLoopGroup;
     private static int matchId = -1;
-    private static StringBuilder buffer;
+    private static StringBuilder buffer = new StringBuilder();
 
     private ClientNetworkHelper(){}
 
