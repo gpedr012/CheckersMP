@@ -44,10 +44,10 @@ public class OnlineGameManager
 
             Tile enemyTile = board.getTile(enemyRow, enemyCol);
 
-            Animator.playMovementAnimation(board, currentTile, destinationTile, enemyTile);
+            Animator.playEnemyMovementAnimation(board, currentTile, destinationTile, enemyTile);
 
         } else {
-            Animator.playMovementAnimation(board, currentTile, destinationTile);
+            Animator.playEnemyMovementAnimation(board, currentTile, destinationTile);
 
         }
     }

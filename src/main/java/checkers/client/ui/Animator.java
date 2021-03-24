@@ -1,6 +1,7 @@
 package checkers.client.ui;
 
 import checkers.client.game.MoveList;
+import checkers.client.game.OnlineGameManager;
 import checkers.client.game.Player;
 import checkers.client.network.ClientNetworkHelper;
 import checkers.networkutils.Message;
@@ -39,19 +40,19 @@ public class Animator {
 
     }
 
-    public static void playMovementAnimation(Board board, Tile currentTile, Tile destinationTile)
+    public static void playEnemyMovementAnimation(Board board, Tile currentTile, Tile destinationTile)
     {
         Piece piece = currentTile.getPiece();
-        EventHandler<ActionEvent> finishHandler = event -> finishAnimation(board, piece, destinationTile);
+        EventHandler<ActionEvent> finishHandler = event -> finishEnemyAnimation(board, piece, destinationTile);
         initAnimation(board, currentTile, destinationTile, finishHandler);
 
 
     }
 
-    public static void playMovementAnimation(Board board, Tile currentTile, Tile destinationTile, Tile enemyTile)
+    public static void playEnemyMovementAnimation(Board board, Tile currentTile, Tile destinationTile, Tile enemyTile)
     {
         Piece piece = currentTile.getPiece();
-        EventHandler<ActionEvent> finishHandler = event -> finishAnimation(board, piece, destinationTile);
+        EventHandler<ActionEvent> finishHandler = event -> finishEnemyAnimation(board, piece, destinationTile, enemyTile);
         initAnimation(board, currentTile, destinationTile, finishHandler);
 
 
@@ -86,18 +87,22 @@ public class Animator {
 
     }
 
-    private static void finishAnimation(Board board, Piece piece, Tile destination)
+    private static void finishEnemyAnimation(Board board, Piece piece, Tile destination)
     {
         finishAnimCleanup(board, piece, destination);
+
+        OnlineGameManager.processPlayerTurn();
 
 
     }
 
-    private static void finishAnimation(Board board, Piece piece, Tile destination, Tile enemyTile)
+    private static void finishEnemyAnimation(Board board, Piece piece, Tile destination, Tile enemyTile)
     {
         finishAnimCleanup(board, piece, destination);
 
         enemyTile.eliminatePiece();
+
+        OnlineGameManager.processPlayerTurn();
 
 
     }

@@ -29,26 +29,25 @@ public class CheckersMatch {
         int colOrigin = args[Message.COL_ORIGIN_IDX];
         int rowDest = args[Message.ROW_DEST_IDX];
         int colDest = args[Message.COL_DEST_IDX];
+        String msg;
 
-        StringBuffer msg = new StringBuffer();
-        msg.append(Message.createMatchMoveMsg(0, rowOrigin, colOrigin, rowDest, colDest));
 
         if(type == Action.Type.MOVE_ELIM) {
             int enemyRow = args[Message.ROW_ELIM_IDX];
             int enemyCol = args[Message.COL_ELIM_IDX];
 
-            msg.append(String.format("-%d-%d", enemyRow, enemyCol));
+            msg = Message.createMatchMoveMsg(0, rowOrigin, colOrigin, rowDest, colDest, enemyRow, enemyCol);
 
 
+        } else {
+            msg = Message.createMatchMoveMsg(0, rowOrigin, colOrigin, rowDest, colDest);
         }
 
         if(initiator == playerOne) {
             playerTwo.writeAndFlush(msg).sync();
-            playerTwo.writeAndFlush(Message.createHasTurnMsg()).sync();
 
         } else {
             playerOne.writeAndFlush(msg).sync();
-            playerOne.writeAndFlush(Message.createHasTurnMsg()).sync();
         }
     }
 
