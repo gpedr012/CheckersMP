@@ -3,6 +3,7 @@ package checkers.client.ui;
 import checkers.client.game.MoveList;
 import checkers.client.game.Player;
 import checkers.client.network.ClientNetworkHelper;
+import checkers.networkutils.Message;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -78,12 +79,7 @@ public class Animator {
         if(piece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
         {
             piece.getPossibleMoves().getOpponentTile().eliminatePiece();
-            if(ClientNetworkHelper.isInOnlineGame()) {
-                Tile enemyTile = piece.getPossibleMoves().getOpponentTile();
 
-                ClientNetworkHelper.addToBuffer(String.format("-%d-%d", enemyTile.getRow(), enemyTile.getCol()));
-
-            }
         }
 
         player.endTurn();

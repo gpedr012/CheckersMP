@@ -149,7 +149,18 @@ public class HumanPlayer extends Player
                         int rowDest = destinationTile.getRow();
                         int colDest = destinationTile.getCol();
 
-                        ClientNetworkHelper.addToBuffer(Message.createMatchMoveMsg(matchId, rowOrigin, colOrigin, rowDest, colDest));
+                        if(currentPiece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED) {
+                            Tile enemyTile = currentPiece.getPossibleMoves().getOpponentTile();
+                            int enemyRow = enemyTile.getRow();
+                            int enemyCol = enemyTile.getCol();
+
+                            ClientNetworkHelper.addToBuffer(Message.createMatchMoveMsg(matchId, rowOrigin, colOrigin, rowDest, colDest, enemyRow, enemyCol));
+
+                        } else {
+                            ClientNetworkHelper.addToBuffer(Message.createMatchMoveMsg(matchId, rowOrigin, colOrigin, rowDest, colDest));
+                        }
+
+
                     }
 
                     playMovementAnimation(currentTile, destinationTile);
