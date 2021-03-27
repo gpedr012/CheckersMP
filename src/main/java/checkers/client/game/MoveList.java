@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class MoveList
-{
-    public enum MovePriority
-    {
+public class MoveList {
+    public enum MovePriority {
         OPTIONAL, REQUIRED, EMPTY
     }
 
@@ -17,102 +15,92 @@ public class MoveList
     private MovePriority priority;
     private Tile opponentTile = null;
 
-    //TODO: Improve how if required can forget to set opponent tile. Add statics.
-    public MoveList(List<Tile> tiles, MovePriority priority)
-    {
+
+    public MoveList(List<Tile> tiles, MovePriority priority) {
         this.tiles = tiles;
         this.priority = priority;
 
     }
 
-    public MoveList()
-    {
+    public MoveList() {
 
         this(new ArrayList<>(4), MovePriority.EMPTY);
 
     }
 
-    public void addAll(MoveList incomingList)
-    {
-        switch (priority)
-        {
+    public void addAll(MoveList incomingList) {
+        switch (priority) {
             case REQUIRED:
                 break;
             case OPTIONAL:
-                if (incomingList.priority == MovePriority.REQUIRED)
-                {
+                if (incomingList.priority == MovePriority.REQUIRED) {
                     tiles.clear();
+                    this.priority = MovePriority.REQUIRED;
+                    opponentTile = incomingList.getOpponentTile();
                 }
-                tiles.addAll(incomingList.tiles);
+                    tiles.addAll(incomingList.tiles);
+
                 break;
             case EMPTY:
                 this.tiles = incomingList.tiles;
                 this.priority = incomingList.priority;
+                if(incomingList.priority == MovePriority.REQUIRED) {
+                    this.opponentTile = incomingList.getOpponentTile();
+                }
                 break;
             default:
                 tiles.addAll(incomingList.tiles);
         }
     }
 
-    public void addMove(Tile tile, MovePriority movePriority)
-    {
+    public void addMove(Tile tile, MovePriority movePriority) {
         tiles.add(tile);
         priority = movePriority;
 
     }
 
 
-    public void clear()
-    {
+    public void clear() {
         priority = MovePriority.EMPTY;
+        opponentTile = null;
         tiles.clear();
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return priority == MovePriority.EMPTY;
 
     }
 
-    public MovePriority getPriority()
-    {
+    public MovePriority getPriority() {
         return priority;
     }
 
-    public void setPriority(MovePriority priority)
-    {
+    public void setPriority(MovePriority priority) {
 
         this.priority = priority;
     }
 
 
-    public void setOpponentTile(Tile opponentTile)
-    {
+    public void setOpponentTile(Tile opponentTile) {
         this.opponentTile = opponentTile;
     }
 
-    public int size()
-    {
+    public int size() {
         return tiles.size();
     }
 
-    public Tile get(int index)
-    {
+    public Tile get(int index) {
         return tiles.get(index);
     }
 
-    public Tile getOpponentTile()
-    {
-        if(priority != MovePriority.REQUIRED)
-        {
+    public Tile getOpponentTile() {
+        if (priority != MovePriority.REQUIRED) {
             throw new RuntimeException("There is no opponent tile to jump to.");
-        }
-        else
+        } else
             return opponentTile;
     }
 
-    public Iterator<Tile> iterator()
-    {
+    public Iterator<Tile> iterator() {
         return tiles.iterator();
     }
 
