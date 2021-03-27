@@ -1,4 +1,4 @@
-#home-btn {
+.home-btn {
     -fx-background-image: url("/homebtn.png");
     -fx-background-position: center;
     -fx-background-size: auto;
@@ -7,35 +7,42 @@
 }
 
 
-#pane {
+.pane {
     -fx-background-image: url("/mainbg.jpg");
     -fx-background-size: 500 500;
     -fx-background-repeat: repeat;
     -fx-background-position: top center;
 }
 
-#title-label {
+.title-label {
     -fx-font-size: 85px;
     -fx-font-family: "Garamond";
     -fx-text-fill: red;
     -fx-effect: dropshadow(three-pass-box, #6f0606, 5, 0.66, 0, 0);
 }
 
-#subtitle-label {
+.subtitle-label {
     -fx-font-family: Georgia;
     -fx-font-size: 20;
     -fx-text-fill: black;
     -fx-font-weight: bold;
 }
 
-#server-info {
+.end-menu-label {
+    -fx-font-family: Georgia;
+    -fx-font-size: 35;
+    -fx-text-fill: black;
+    -fx-font-weight: bold;
+}
+
+.server-info {
     -fx-font-family: Georgia;
     -fx-font-size: 16;
     -fx-text-fill: blue;
     -fx-font-weight: bold;
 }
 
-#accept-btn {
+.accept-btn {
     -fx-effect: dropshadow(three-pass-box, #276873, 20, 0.50, 0, 0);
     -fx-background-color: #599bb3;
     -fx-background-radius: 5, 5, 5, 5;
@@ -52,18 +59,18 @@
 
 }
 
-#accept-btn:hover {
+.accept-btn:hover {
     -fx-background-color: #3c7e93;
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 
 }
 
-#accept-btn:selected {
+.accept-btn:selected {
     -fx-border-color: white;
 }
 
-#cancel-btn {
+.cancel-btn {
     -fx-effect: dropshadow(three-pass-box, #862b2b, 20, 0.50, 0, 0);
     -fx-background-color: #e01616;
     -fx-background-radius: 5, 5, 5, 5;
@@ -80,13 +87,18 @@
 
 }
 
-#cancel-btn:hover {
+.end-menu {
+    -fx-font-size: 15px;
+
+}
+
+.cancel-btn:hover {
     -fx-background-color: #933c3c;
     -fx-text-fill: #adadad;
     -fx-cursor: hand;
 }
 
-#sethover:hover {
+.sethover:hover {
     -fx-cursor: hand;
     -fx-highlight-fill: white;
 }

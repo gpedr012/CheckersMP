@@ -45,7 +45,7 @@ public class MainMenu extends Application {
     private static Label serverMessage = new Label();
 
     static {
-        serverMessage.setId("server-info");
+        serverMessage.getStyleClass().add("server-info");
     }
 
     @Override
@@ -64,10 +64,10 @@ public class MainMenu extends Application {
         Button defaultBtnOne = new Button();
         Button defaultBtnTwo = new Button();
 
-        defaultBtnOne.setId("accept-btn");
+        defaultBtnOne.getStyleClass().add("accept-btn");
         defaultBtnOne.setPrefSize(200, 55);
 
-        defaultBtnTwo.setId("accept-btn");
+        defaultBtnTwo.getStyleClass().add("accept-btn");
         defaultBtnTwo.setPrefSize(200, 55);
 
         VBox center = (VBox) root.getCenter();
@@ -118,8 +118,8 @@ public class MainMenu extends Application {
             Label connStatus = new Label("Connection Status: ");
             Label actualStatus = new Label();
 
-            connStatus.setId("subtitle-label");
-            actualStatus.setId("subtitle-label");
+            connStatus.getStyleClass().add("subtitle-label");
+            actualStatus.getStyleClass().add("subtitle-label");
 
             if (!ClientNetworkHelper.isConnected()) {
                 defaultBtnOne.setDisable(true);
@@ -193,8 +193,8 @@ public class MainMenu extends Application {
             Button playBtn = new Button("PLAY");
             ColorToggleMenu colorSelector = new ColorToggleMenu();
 
-            chooseColorLbl.setId("subtitle-label");
-            playBtn.setId("accept-btn");
+            chooseColorLbl.getStyleClass().add("subtitle-label");
+            playBtn.getStyleClass().add("accept-btn");
 
             center.setAlignment(Pos.TOP_CENTER);
             bottomBtn.setText("GO BACK");
@@ -209,9 +209,9 @@ public class MainMenu extends Application {
                 HBox difficultyToggleContainer = new HBox(easyToggle, mediumToggle);
                 Label difficultyLbl = new Label("CHOOSE A DIFFICULTY");
 
-                easyToggle.setId("accept-btn");
-                mediumToggle.setId("accept-btn");
-                difficultyLbl.setId("subtitle-label");
+                easyToggle.getStyleClass().add("accept-btn");
+                mediumToggle.getStyleClass().add("accept-btn");
+                difficultyLbl.getStyleClass().add("subtitle-label");
 
                 easyToggle.setToggleGroup(difficultyToggles);
                 mediumToggle.setToggleGroup(difficultyToggles);
@@ -295,12 +295,12 @@ public class MainMenu extends Application {
         ClientNetworkHelper.setIsInOnlineGame(true);
 
         Player player = new HumanPlayer(playerColor, 1, gameBoard);
-        Player onlineOpponent = new OnlineOpponent(opponentColor, 2, gameBoard);
+        Player playerTwo = new OnlineOpponent(opponentColor, 2, gameBoard);
 
-        GameLoop onlineGame = new GameLoop(gameBoard, player, onlineOpponent);
+        GameLoop onlineGame = new GameLoop(gameBoard, player);
 
         try {
-            onlineGame.start(mainStage);
+            onlineGame.startOnline(mainStage);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -323,10 +323,10 @@ public class MainMenu extends Application {
     private BorderPane getUISkeleton() {
         BorderPane root = new BorderPane();
         root.getStylesheets().add("menustyle.css");
-        root.setId("pane");
+        root.getStyleClass().add("pane");
 
         Label title = new Label("CHECKERS");
-        title.setId("title-label");
+        title.getStyleClass().add("title-label");
 
         BorderPane.setAlignment(title, Pos.TOP_CENTER);
         root.setTop(title);
@@ -338,7 +338,7 @@ public class MainMenu extends Application {
         root.setCenter(centerVBox);
 
         Button bottomBtn = new Button();
-        bottomBtn.setId("cancel-btn");
+        bottomBtn.getStyleClass().add("cancel-btn");
         bottomBtn.setPrefSize(175, 35);
         BorderPane.setAlignment(bottomBtn, Pos.BOTTOM_CENTER);
         BorderPane.setMargin(bottomBtn, new Insets(20, 0, 33, 0));
