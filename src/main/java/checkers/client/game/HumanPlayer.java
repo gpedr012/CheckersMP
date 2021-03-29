@@ -107,18 +107,18 @@ public class HumanPlayer extends Player
 
     private void setHighLightTiles(boolean value, Piece piece)
     {
-        Iterator<Tile> iterator = piece.getPossibleMoves().iterator();
+        Iterator<Move> iterator = piece.getPossibleMoves().iterator();
         while(iterator.hasNext())
         {
-            Tile tile = iterator.next();
-            tile.highlightTile(value);
+            Move move = iterator.next();
+            move.getMovementTile().highlightTile(value);
             if(value)
             {
-                tile.setOnMouseClicked(logic.getTileLogic());
+                move.getMovementTile().setOnMouseClicked(logic.getTileLogic());
             }
             else
             {
-                tile.setOnMouseClicked(null);
+                move.getMovementTile().setOnMouseClicked(null);
             }
 
         }
@@ -149,8 +149,9 @@ public class HumanPlayer extends Player
                         int rowDest = destinationTile.getRow();
                         int colDest = destinationTile.getCol();
 
-                        if(currentPiece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED) {
-                            Tile enemyTile = currentPiece.getPossibleMoves().getOpponentTile();
+                        if(currentPiece.getPossibleMoves().getPriority() == MoveType.REQUIRED) {
+                            Move currentMove = currentPiece.getPossibleMoves().findMove(destinationTile);
+                            Tile enemyTile = currentMove.getOpponentTile();
                             int enemyRow = enemyTile.getRow();
                             int enemyCol = enemyTile.getCol();
 
@@ -158,6 +159,7 @@ public class HumanPlayer extends Player
 
                         } else {
                             ClientNetworkHelper.addToBuffer(Message.createMatchMoveMsg(matchId, rowOrigin, colOrigin, rowDest, colDest));
+
                         }
 
 
@@ -179,6 +181,8 @@ public class HumanPlayer extends Player
                     selectedPiece.setValue(clickedPiece);
                     clickedPiece.setHighLight(true, Color.GOLD);
                     setHighLightTiles(true, clickedPiece);
+
+
 
                 }
             };

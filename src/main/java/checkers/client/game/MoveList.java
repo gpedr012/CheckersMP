@@ -7,101 +7,95 @@ import java.util.Iterator;
 import java.util.List;
 
 public class MoveList {
-    public enum MovePriority {
-        OPTIONAL, REQUIRED, EMPTY
-    }
-
-    private List<Tile> tiles;
-    private MovePriority priority;
-    private Tile opponentTile = null;
 
 
-    public MoveList(List<Tile> tiles, MovePriority priority) {
-        this.tiles = tiles;
-        this.priority = priority;
+    private MoveType priorityType;
+    private List<Move> moves;
+
+
+    public MoveList(List<Move> moves, MoveType priorityType) {
+
+        this.priorityType = priorityType;
+        this.moves = moves;
 
     }
 
     public MoveList() {
 
-        this(new ArrayList<>(4), MovePriority.EMPTY);
+        this(new ArrayList<>(4), MoveType.EMPTY);
 
     }
 
     public void addAll(MoveList incomingList) {
-        switch (priority) {
+        switch (priorityType) {
             case REQUIRED:
+                if(incomingList.priorityType == MoveType.REQUIRED) {
+                    moves.addAll(incomingList.moves);
+                }
                 break;
             case OPTIONAL:
-                if (incomingList.priority == MovePriority.REQUIRED) {
-                    tiles.clear();
-                    this.priority = MovePriority.REQUIRED;
-                    opponentTile = incomingList.getOpponentTile();
+                if (incomingList.priorityType == MoveType.REQUIRED) {
+                    moves.clear();
+                    this.priorityType = MoveType.REQUIRED;
                 }
-                    tiles.addAll(incomingList.tiles);
+                    moves.addAll(incomingList.moves);
 
                 break;
             case EMPTY:
-                this.tiles = incomingList.tiles;
-                this.priority = incomingList.priority;
-                if(incomingList.priority == MovePriority.REQUIRED) {
-                    this.opponentTile = incomingList.getOpponentTile();
-                }
+                this.moves = incomingList.moves;
+                this.priorityType = incomingList.priorityType;
                 break;
             default:
-                tiles.addAll(incomingList.tiles);
+                moves.addAll(incomingList.moves);
         }
     }
 
-    public void addMove(Tile tile, MovePriority movePriority) {
-        tiles.add(tile);
-        priority = movePriority;
+    public void addMove(Move move) {
+        moves.add(move);
+        this.priorityType = move.getPriorityType();
 
     }
 
 
     public void clear() {
-        priority = MovePriority.EMPTY;
-        opponentTile = null;
-        tiles.clear();
+        priorityType = MoveType.EMPTY;
+        moves.clear();
     }
 
     public boolean isEmpty() {
-        return priority == MovePriority.EMPTY;
+        return priorityType == MoveType.EMPTY;
 
     }
 
-    public MovePriority getPriority() {
-        return priority;
+    public MoveType getPriority() {
+        return priorityType;
     }
 
-    public void setPriority(MovePriority priority) {
+    public void setPriority(MoveType moveType) {
 
-        this.priority = priority;
+        this.priorityType = moveType;
     }
 
+    public Move findMove(Tile tile) {
+        for (Move move: moves) {
+            if(move.getMovementTile() == tile) {
+                return move;
+            }
+        }
 
-    public void setOpponentTile(Tile opponentTile) {
-        this.opponentTile = opponentTile;
+        return null;
     }
 
     public int size() {
-        return tiles.size();
+        return moves.size();
     }
 
-    public Tile get(int index) {
-        return tiles.get(index);
+    public Move get(int index) {
+        return moves.get(index);
     }
 
-    public Tile getOpponentTile() {
-        if (priority != MovePriority.REQUIRED) {
-            throw new RuntimeException("There is no opponent tile to jump to.");
-        } else
-            return opponentTile;
-    }
-
-    public Iterator<Tile> iterator() {
-        return tiles.iterator();
+    public Iterator<Move> iterator() {
+        return moves.iterator();
     }
 
 

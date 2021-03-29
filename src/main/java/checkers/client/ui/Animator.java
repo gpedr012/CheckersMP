@@ -1,10 +1,6 @@
 package checkers.client.ui;
 
-import checkers.client.game.MoveList;
-import checkers.client.game.OnlineGameManager;
-import checkers.client.game.Player;
-import checkers.client.network.ClientNetworkHelper;
-import checkers.networkutils.Message;
+import checkers.client.game.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -34,7 +30,8 @@ public class Animator {
     public static void playMovementAnimation(Player player, Board board, Tile currentTile, Tile destinationTile)
     {
         Piece piece = currentTile.getPiece();
-        EventHandler<ActionEvent> finishHandler = event -> finishAnimation(player, board, piece, destinationTile);
+        Move moveBeingProcessed = piece.getPossibleMoves().findMove(destinationTile);
+        EventHandler<ActionEvent> finishHandler = event -> finishAnimation(player, board, piece, moveBeingProcessed);
         initAnimation(board, currentTile, destinationTile, finishHandler);
 
 
@@ -73,13 +70,13 @@ public class Animator {
 
 
 
-    private static void finishAnimation(Player player, Board board, Piece piece, Tile destination)
+    private static void finishAnimation(Player player, Board board, Piece piece, Move move)
     {
-        finishAnimCleanup(board, piece, destination);
+        finishAnimCleanup(board, piece, move.getMovementTile());
 
-        if(piece.getPossibleMoves().getPriority() == MoveList.MovePriority.REQUIRED)
+        if(piece.getPossibleMoves().getPriority() == MoveType.REQUIRED)
         {
-            piece.getPossibleMoves().getOpponentTile().eliminatePiece();
+            move.getOpponentTile().eliminatePiece();
 
         }
 

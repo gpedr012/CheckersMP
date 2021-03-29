@@ -1,17 +1,13 @@
 package checkers.client.game;
 
-import checkers.client.network.ClientNetworkHelper;
 import checkers.client.ui.Animator;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
 import checkers.client.ui.Tile;
-import javafx.animation.TranslateTransition;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Bounds;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +58,7 @@ public abstract class Player
         {
             piecesList.get(i).getPossibleMoves().clear();
             MoveList newMoveList = moveCalculator.getMoves(piecesList.get(i));
-            if (newMoveList.getPriority() == MoveList.MovePriority.REQUIRED)
+            if (newMoveList.getPriority() == MoveType.REQUIRED)
             {
                 foundRequired = true;
                 piecesList.get(i).setPossibleMoves(newMoveList);
@@ -113,7 +109,7 @@ public abstract class Player
 
     public boolean hasPiecesLeft()
     {
-        return piecesList.isEmpty();
+        return !piecesList.isEmpty();
     }
 
     public int getPlayerNumber()

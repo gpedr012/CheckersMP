@@ -29,10 +29,10 @@ public class EasyAI extends Player
 
         int movesSize = pieceToMove.getPossibleMoves().size();
         int moveIndex = (int)(Math.random() * movesSize);
-        Tile destinationTile = pieceToMove.getPossibleMoves().get(moveIndex);
+        Move movementToDo = pieceToMove.getPossibleMoves().get(moveIndex);
 
         Tile currentTile = getBoard().getTile(pieceToMove.getRow(), pieceToMove.getCol());
-        playMovementAnimation(currentTile, destinationTile);
+        playMovementAnimation(currentTile, movementToDo.getMovementTile());
 
     }
 
