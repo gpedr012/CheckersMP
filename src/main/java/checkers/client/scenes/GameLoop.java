@@ -1,16 +1,10 @@
 package checkers.client.scenes;
 
 
-import checkers.client.game.GameManager;
-import checkers.client.game.HumanPlayer;
-import checkers.client.game.OnlineGameManager;
-import checkers.client.game.Player;
+import checkers.client.game.*;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
-import checkers.client.ui.Tile;
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -20,8 +14,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+
+import java.lang.reflect.Constructor;
 
 
 public class GameLoop extends Application {
@@ -30,9 +25,8 @@ public class GameLoop extends Application {
     Player player1;
     Player player2;
     Board board;
-    Scene scene;
     Stage stage;
-    Pane rootContainer;
+    Pane boardContainer;
 
 
     public GameLoop() {
@@ -60,7 +54,6 @@ public class GameLoop extends Application {
         setUpStage(stage);
         gameManager.startGame();
 
-
     }
 
 
@@ -74,10 +67,10 @@ public class GameLoop extends Application {
 
     private void setUpStage(Stage stage) {
         HBox rootContainer = new HBox();
-        this.rootContainer = rootContainer;
         BorderPane contentHolder = new BorderPane();
         StackPane boardContainer = new StackPane(board);
 
+        this.boardContainer = boardContainer;
         this.stage = stage;
 
         BorderPane.setAlignment(boardContainer, Pos.CENTER);
@@ -98,8 +91,8 @@ public class GameLoop extends Application {
 
     }
 
-    public void endGame() {
-        rootContainer.getChildren().add(createEndDialog());
+    public void endGame(String msg) {
+        boardContainer.getChildren().add(createEndDialog(msg));
 
     }
 
@@ -122,7 +115,7 @@ public class GameLoop extends Application {
         return container;
     }
 
-    private GridPane createEndDialog() {
+    private GridPane createEndDialog(String msg) {
         GridPane root = new GridPane();
         root.getStylesheets().add("menustyle.css");
         root.setMaxHeight(stage.getHeight() / 4);
@@ -133,12 +126,15 @@ public class GameLoop extends Application {
 
         Button retryBtn = new Button("Play Again");
         Button mainMenuBtn = new Button("Main Menu");
-        Label status = new Label("Status!");
+        Label status = new Label(msg);
 
 
         retryBtn.setOnAction(event -> {
             try {
-                this.start(this.stage);
+                board = new Board();
+                player1 = resetPlayer(player1);
+                player2 = resetPlayer(player2);
+                this.start(stage);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -160,16 +156,28 @@ public class GameLoop extends Application {
         GridPane.setHalignment(status, HPos.CENTER);
         GridPane.setValignment(status, VPos.TOP);
         GridPane.setMargin(status, new Insets(2, 0, 60, 0));
+        GridPane.setMargin(retryBtn, new Insets(0, 0, 0, 20));
+        GridPane.setHalignment(retryBtn, HPos.CENTER);
+        GridPane.setHalignment(mainMenuBtn, HPos.CENTER);
         root.setAlignment(Pos.CENTER);
         root.add(retryBtn, 0, 1);
         root.add(mainMenuBtn, 1, 1);
         root.add(status, 0, 0);
 
 
-
         return root;
     }
 
+
+    private Player resetPlayer(Player player) throws Exception {
+        Class<?> playerClass = Class.forName(player.getClass().getName());
+        Constructor<?> ctor = playerClass.getConstructor(Piece.PieceColor.class, int.class, Board.class);
+
+        player = (Player) ctor.newInstance(player.getPlayerColor(), player.getPlayerNumber(), board);
+
+        return player;
+
+    }
 
     public static void main(String[] args) {
         launch(args);
