@@ -6,29 +6,26 @@ import checkers.client.ui.Tile;
 
 import java.util.List;
 
-public class EasyAI extends Player
-{
+public class EasyAI extends Player {
 
-    public EasyAI(Piece.PieceColor playerColor, int playerNumber, Board board)
-    {
+    public EasyAI(Piece.PieceColor playerColor, int playerNumber, Board board) {
         super(playerColor, playerNumber, board);
 
     }
 
     @Override
-    public void processTurn()
-    {
+    public void processTurn() {
 
         calculatePossibleMoves();
-        List<Piece> piecesWithMoves =  getPiecesWithMoves();
+        List<Piece> piecesWithMoves = getPiecesWithMoves();
 
 
         int piecesSize = piecesWithMoves.size();
-        int pieceToMoveIndex = (int)(Math.random() * piecesSize);
+        int pieceToMoveIndex = (int) (Math.random() * piecesSize);
         Piece pieceToMove = piecesWithMoves.get(pieceToMoveIndex);
 
         int movesSize = pieceToMove.getPossibleMoves().size();
-        int moveIndex = (int)(Math.random() * movesSize);
+        int moveIndex = (int) (Math.random() * movesSize);
         Move movementToDo = pieceToMove.getPossibleMoves().get(moveIndex);
 
         Tile currentTile = getBoard().getTile(pieceToMove.getRow(), pieceToMove.getCol());
@@ -37,8 +34,7 @@ public class EasyAI extends Player
     }
 
     @Override
-    public void endTurn()
-    {
+    public void endTurn() {
         setHasTurn(false);
     }
 }

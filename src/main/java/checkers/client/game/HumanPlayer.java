@@ -15,12 +15,10 @@ import javafx.scene.paint.Color;
 import java.util.Iterator;
 
 
-public class HumanPlayer extends Player
-{
+public class HumanPlayer extends Player {
     private final Logic logic = new Logic();
 
-    public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board)
-    {
+    public HumanPlayer(Piece.PieceColor playerColor, int playerNumber, Board board) {
         super(playerColor, playerNumber, board);
         initLogic();
 
@@ -28,11 +26,9 @@ public class HumanPlayer extends Player
 
 
     @Override
-    public void processTurn()
-    {
+    public void processTurn() {
         calculatePossibleMoves();
-        for (Piece piece : getPiecesWithMoves())
-        {
+        for (Piece piece : getPiecesWithMoves()) {
             piece.setHighLight(true, Color.WHITE);
 
         }
@@ -40,39 +36,31 @@ public class HumanPlayer extends Player
     }
 
     @Override
-    public void endTurn()
-    {
+    public void endTurn() {
         setHasTurn(false);
-        for (Piece piece : getPiecesWithMoves())
-        {
+        for (Piece piece : getPiecesWithMoves()) {
             piece.setHighLight(false, null);
 
         }
         setHighLightTiles(false, selectedPiece.get());
 
-        if(ClientNetworkHelper.isInOnlineGame()) {
+        if (ClientNetworkHelper.isInOnlineGame()) {
             ClientNetworkHelper.flushBufferToServer();
 
         }
 
     }
 
-    private void initLogic()
-    {
-        selectedPiece.addListener(new ChangeListener<Piece>()
-        {
+    private void initLogic() {
+        selectedPiece.addListener(new ChangeListener<Piece>() {
             @Override
-            public void changed(ObservableValue<? extends Piece> observableValue, Piece oldPiece, Piece newPiece)
-            {
-                if (oldPiece != null)
-                {
-                    if(oldPiece.hasAnyMoves())
-                    {
+            public void changed(ObservableValue<? extends Piece> observableValue, Piece oldPiece, Piece newPiece) {
+                if (oldPiece != null) {
+                    if (oldPiece.hasAnyMoves()) {
+
                         oldPiece.setHighLight(true, Color.WHITE);
                         setHighLightTiles(false, oldPiece);
-                    }
-                    else
-                    {
+                    } else {
                         oldPiece.setHighLight(false, null);
                     }
                 }
@@ -80,23 +68,18 @@ public class HumanPlayer extends Player
             }
         });
 
-        for (Piece piece : piecesList)
-        {
-            piece.onMouseClickedProperty().bind(new ObjectBinding<EventHandler<? super MouseEvent>>()
-            {
+        for (Piece piece : piecesList) {
+            piece.onMouseClickedProperty().bind(new ObjectBinding<EventHandler<? super MouseEvent>>() {
                 {
                     super.bind(hasTurnProperty());
                 }
 
                 @Override
-                protected EventHandler<? super MouseEvent> computeValue()
-                {
-                    if(hasTurnProperty().get())
-                    {
+                protected EventHandler<? super MouseEvent> computeValue() {
+                    if (hasTurnProperty().get()) {
+
                         return logic.getPieceLogic();
-                    }
-                    else
-                    {
+                    } else {
                         return null;
                     }
                 }
@@ -105,19 +88,15 @@ public class HumanPlayer extends Player
 
     }
 
-    private void setHighLightTiles(boolean value, Piece piece)
-    {
+    private void setHighLightTiles(boolean value, Piece piece) {
+
         Iterator<Move> iterator = piece.getPossibleMoves().iterator();
-        while(iterator.hasNext())
-        {
+        while (iterator.hasNext()) {
             Move move = iterator.next();
             move.getMovementTile().highlightTile(value);
-            if(value)
-            {
+            if (value) {
                 move.getMovementTile().setOnMouseClicked(logic.getTileLogic());
-            }
-            else
-            {
+            } else {
                 move.getMovementTile().setOnMouseClicked(null);
             }
 
@@ -125,31 +104,28 @@ public class HumanPlayer extends Player
 
     }
 
-    private class Logic
-    {
+    private class Logic {
         EventHandler<MouseEvent> tileLogic;
         EventHandler<MouseEvent> pieceLogic;
 
-        public Logic()
-        {
-            tileLogic = new EventHandler<MouseEvent>()
-            {
+        public Logic() {
+
+            tileLogic = new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(MouseEvent mouseEvent)
-                {
+                public void handle(MouseEvent mouseEvent) {
                     Piece currentPiece = selectedPiece.get();
                     Tile currentTile = getBoard().getTile(currentPiece.getRow(), currentPiece.getCol());
-                    Tile destinationTile = (Tile)mouseEvent.getSource();
+                    Tile destinationTile = (Tile) mouseEvent.getSource();
 
 
-                    if(ClientNetworkHelper.isInOnlineGame()) {
+                    if (ClientNetworkHelper.isInOnlineGame()) {
                         int matchId = ClientNetworkHelper.getMatchId();
                         int rowOrigin = currentTile.getRow();
                         int colOrigin = currentTile.getCol();
                         int rowDest = destinationTile.getRow();
                         int colDest = destinationTile.getCol();
 
-                        if(currentPiece.getPossibleMoves().getPriority() == MoveType.REQUIRED) {
+                        if (currentPiece.getPossibleMoves().getPriority() == MoveType.REQUIRED) {
                             Move currentMove = currentPiece.getPossibleMoves().findMove(destinationTile);
                             Tile enemyTile = currentMove.getOpponentTile();
                             int enemyRow = enemyTile.getRow();
@@ -172,29 +148,26 @@ public class HumanPlayer extends Player
                 }
             };
 
-            pieceLogic = new EventHandler<MouseEvent>()
-            {
+            pieceLogic = new EventHandler<MouseEvent>() {
                 @Override
-                public void handle(MouseEvent mouseEvent)
-                {
-                    Piece clickedPiece = (Piece)mouseEvent.getSource();
+                public void handle(MouseEvent mouseEvent) {
+
+                    Piece clickedPiece = (Piece) mouseEvent.getSource();
                     selectedPiece.setValue(clickedPiece);
                     clickedPiece.setHighLight(true, Color.GOLD);
                     setHighLightTiles(true, clickedPiece);
-
 
 
                 }
             };
         }
 
-        public EventHandler<MouseEvent> getTileLogic()
-        {
+        public EventHandler<MouseEvent> getTileLogic() {
             return tileLogic;
         }
 
-        public EventHandler<MouseEvent> getPieceLogic()
-        {
+        public EventHandler<MouseEvent> getPieceLogic() {
+
             return pieceLogic;
         }
     }

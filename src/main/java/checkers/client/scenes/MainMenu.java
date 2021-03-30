@@ -35,14 +35,14 @@ import javafx.stage.Stage;
 public class MainMenu extends Application {
 
     private enum SceneType {
-        MAIN, LOCAL, ONLINE, SINGLE_PLAYER, TWO_PLAYER;
+        MAIN, LOCAL, ONLINE, SINGLE_PLAYER, TWO_PLAYER
     }
 
     static Stage mainStage;
 
-    private static BooleanProperty isFindingMatch = new SimpleBooleanProperty(false);
+    private static final BooleanProperty isFindingMatch = new SimpleBooleanProperty(false);
 
-    private static Label serverMessage = new Label();
+    private static final Label serverMessage = new Label();
 
     static {
         serverMessage.getStyleClass().add("server-info");

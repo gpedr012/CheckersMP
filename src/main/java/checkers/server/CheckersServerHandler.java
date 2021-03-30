@@ -13,9 +13,9 @@ import java.util.List;
 
 public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
-    private Parser parser = new Parser();
-    private static List<Channel> channelQueue = new ArrayList<>();
-    private static List<CheckersMatch> matchList = new ArrayList<>();
+    private final Parser parser = new Parser();
+    private static final List<Channel> channelQueue = new ArrayList<>();
+    private static final List<CheckersMatch> matchList = new ArrayList<>();
     private static int matchIdCtr = 0;
 
     @Override
@@ -32,9 +32,9 @@ public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
         switch (action.getType()) {
             case FIND_MATCH:
 
-                if(channelQueue.isEmpty()) {
+                if (channelQueue.isEmpty()) {
                     channelQueue.add(channelHandlerContext.channel());
-                    channelHandlerContext.writeAndFlush(Message.createFindMatchMsg() +  Message.createServerInfoMsg("You have been added to the queue")).sync();
+                    channelHandlerContext.writeAndFlush(Message.createFindMatchMsg() + Message.createServerInfoMsg("You have been added to the queue")).sync();
 
                 } else {
                     Channel opponentChannel = channelQueue.remove(0);
@@ -55,13 +55,13 @@ public class CheckersServerHandler extends SimpleChannelInboundHandler<String> {
 
             case CANCEL_MM:
                 Channel channel = channelHandlerContext.channel();
-                if(channelQueue.remove(channel)) {
+                if (channelQueue.remove(channel)) {
                     channel.writeAndFlush(Message.createCancelMatchMakingMsg() + Message.createServerInfoMsg("You have been removed from the queue."));
                 }
 
             case MOVE_ELIM:
             case MOVE_NO_ELIM:
-                matchList.get(action.getArg(Message.MATCH_ID_IDX)).advance(channelHandlerContext.channel(), action.getType(),action.getAllArgs());
+                matchList.get(action.getArg(Message.MATCH_ID_IDX)).advance(channelHandlerContext.channel(), action.getType(), action.getAllArgs());
 
                 break;
 

@@ -12,21 +12,20 @@ import javafx.beans.property.SimpleObjectProperty;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Player
-{
+public abstract class Player {
 
 
     private final Piece.PieceColor playerColor;
     private final int playerNumber;
-    private BooleanProperty hasTurn = new SimpleBooleanProperty(false);
+    private final BooleanProperty hasTurn = new SimpleBooleanProperty(false);
     protected ObjectProperty<Piece> selectedPiece = new SimpleObjectProperty<>();
     protected List<Piece> piecesList;
-    private MoveCalculator moveCalculator;
-    private Board board;
+    private final MoveCalculator moveCalculator;
+    private final Board board;
 
 
-    public Player(Piece.PieceColor playerColor, int playerNumber, Board board)
-    {
+    public Player(Piece.PieceColor playerColor, int playerNumber, Board board) {
+
         this.playerColor = playerColor;
         this.playerNumber = playerNumber;
         this.board = board;
@@ -34,44 +33,37 @@ public abstract class Player
 
         piecesList = new ArrayList<>(12);
         initPieces();
-        System.out.println(piecesList.size());
         board.addPiecesToBoard(this);
-        System.out.println(piecesList.size());
     }
 
     /**
      * Cleans up the list of pieces (removes any eliminated pieces from  the list
      * Then clears the current movelist for each piece.
      * Scans through the list of pieces, and if it has required priority then the list is immediately assigned.
-     *
+     * <p>
      * Otherwise if no required moves were found it assigns them all to each piece.
-     *
+     * <p>
      * This way if there's a required move, only other required moves are allowed to be executed and non required are not
      * processed so they do not exist.
      */
-    public void calculatePossibleMoves()
-    {
+    public void calculatePossibleMoves() {
+
         cleanUpPiecesList();
         List<MoveList> possibleMoves = new ArrayList<>(12);
         boolean foundRequired = false;
-        for (int i = 0; i < piecesList.size(); i++)
-        {
+        for (int i = 0; i < piecesList.size(); i++) {
             piecesList.get(i).getPossibleMoves().clear();
             MoveList newMoveList = moveCalculator.getMoves(piecesList.get(i));
-            if (newMoveList.getPriority() == MoveType.REQUIRED)
-            {
+            if (newMoveList.getPriority() == MoveType.REQUIRED) {
                 foundRequired = true;
                 piecesList.get(i).setPossibleMoves(newMoveList);
-            } else
-            {
+            } else {
                 possibleMoves.add(newMoveList);
             }
         }
 
-        if (!foundRequired)
-        {
-            for (int i = 0; i < piecesList.size(); i++)
-            {
+        if (!foundRequired) {
+            for (int i = 0; i < piecesList.size(); i++) {
                 piecesList.get(i).setPossibleMoves(possibleMoves.get(i));
 
             }
@@ -79,23 +71,18 @@ public abstract class Player
         }
     }
 
-    private void cleanUpPiecesList()
-    {
+    private void cleanUpPiecesList() {
         piecesList.removeIf(Piece::isEliminated);
     }
 
-    public void addPiece(Piece piece)
-    {
+    public void addPiece(Piece piece) {
         piecesList.add(piece);
     }
 
-    public List<Piece> getPiecesWithMoves()
-    {
+    public List<Piece> getPiecesWithMoves() {
         List<Piece> piecesWithMoves = new ArrayList<>();
-        for (Piece piece : piecesList)
-        {
-            if (piece.hasAnyMoves())
-            {
+        for (Piece piece : piecesList) {
+            if (piece.hasAnyMoves()) {
                 piecesWithMoves.add(piece);
             }
         }
@@ -107,58 +94,54 @@ public abstract class Player
 
     public abstract void endTurn();
 
-    public boolean hasPiecesLeft()
-    {
+    public boolean hasPiecesLeft() {
+        cleanUpPiecesList();
         return !piecesList.isEmpty();
     }
 
-    public int getPlayerNumber()
-    {
+    public int getPlayerNumber() {
         return playerNumber;
     }
 
-    public Piece.PieceColor getPlayerColor()
-    {
+    public Piece.PieceColor getPlayerColor() {
         return playerColor;
     }
 
-    public boolean getHasTurn()
-    {
+    public boolean getHasTurn() {
         return hasTurn.get();
     }
 
-    public BooleanProperty hasTurnProperty()
-    {
+    public BooleanProperty hasTurnProperty() {
         return hasTurn;
     }
 
-    public void setHasTurn(boolean hasTurn)
-    {
+    public void setHasTurn(boolean hasTurn) {
         this.hasTurn.set(hasTurn);
     }
 
-    private void initPieces()
-    {
+    private void initPieces() {
         final int MAX_PIECES = 12;
-        for (int i = 0; i < MAX_PIECES; i++)
-        {
+        for (int i = 0; i < MAX_PIECES; i++) {
             this.addPiece(new Piece(this.playerColor));
+
         }
 
     }
 
-    public Piece getPiece(int index)
-    {
+    @Override
+    public String toString() {
+        return String.format("PlayerColor:  %s <-> PlayerNumber: %d <-> Board: %s", playerColor.toString(), playerNumber, board.toString());
+    }
+
+    public Piece getPiece(int index) {
         return piecesList.get(index);
     }
 
-    protected Board getBoard()
-    {
+    protected Board getBoard() {
         return board;
     }
 
-    protected void playMovementAnimation(Tile currentTile, Tile destinationTile)
-    {
+    protected void playMovementAnimation(Tile currentTile, Tile destinationTile) {
         Animator.playMovementAnimation(this, board, currentTile, destinationTile);
 
     }

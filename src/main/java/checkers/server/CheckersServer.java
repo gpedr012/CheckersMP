@@ -14,7 +14,7 @@ public class CheckersServer {
 
     public static void main(String[] args) {
 
-        if(args.length == 1) {
+        if (args.length == 1) {
 
             port = Integer.parseInt(args[0]);
 

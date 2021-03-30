@@ -77,7 +77,7 @@ public class ClientNetworkHelper {
                 alert.showAndWait();
             }
         };
-
+        System.out.println("CLIENT DEBUG NetworkHelper[SEND MSG]|> " + s);
         new Thread(sendMsgTask).start();
     }
 

@@ -39,7 +39,7 @@ public class Parser {
                 String[] content = msg.split("=")[1].split("-");
                 int[] parsedContent = parseContent(content);
 
-                if(parsedContent.length == 5) {
+                if (parsedContent.length == 5) {
                     return new Action(Action.Type.MOVE_NO_ELIM, parsedContent);
 
 

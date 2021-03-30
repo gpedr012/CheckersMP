@@ -14,7 +14,6 @@ public class MoveCalculator {
     private final Piece.PieceColor playerColor;
 
 
-
     public MoveCalculator(Board board, int playerNumber, Piece.PieceColor playerColor) {
         this.board = board;
         this.playerNumber = playerNumber;
@@ -29,6 +28,7 @@ public class MoveCalculator {
     }
 
     public MoveList getMoves(Piece piece) {
+
         int currentRow = piece.getRow();
         int currentCol = piece.getCol();
 
@@ -88,7 +88,8 @@ public class MoveCalculator {
                     }
                     moveList.addMove(move);
                 case OPTIONAL:
-                    if(moveList.getPriority() != MoveType.REQUIRED) {
+
+                    if (moveList.getPriority() != MoveType.REQUIRED) {
                         moveList.addMove(move);
                     }
                     break;

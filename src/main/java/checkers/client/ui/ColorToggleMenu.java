@@ -3,13 +3,11 @@ package checkers.client.ui;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 
-public class ColorToggleMenu extends HBox
-{
+public class ColorToggleMenu extends HBox {
     ColorToggle darkToggle;
     ColorToggle lightToggle;
 
-    public ColorToggleMenu()
-    {
+    public ColorToggleMenu() {
         ColorToggle darkToggle = new ColorToggle(Piece.PieceColor.DARK);
         ColorToggle lightToggle = new ColorToggle(Piece.PieceColor.LIGHT);
 
@@ -25,18 +23,12 @@ public class ColorToggleMenu extends HBox
         getChildren().addAll(darkToggle, lightToggle);
     }
 
-    public Piece.PieceColor getSelection()
-    {
-        if(darkToggle.isSelected.get())
-        {
+    public Piece.PieceColor getSelection() {
+        if (darkToggle.isSelected.get()) {
             return Piece.PieceColor.DARK;
-        }
-        else if(lightToggle.isSelected.get())
-        {
+        } else if (lightToggle.isSelected.get()) {
             return Piece.PieceColor.LIGHT;
-        }
-        else
-        {
+        } else {
             return Piece.PieceColor.DARK;
         }
     }

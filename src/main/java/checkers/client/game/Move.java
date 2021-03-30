@@ -36,4 +36,8 @@ public class Move {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return String.format("Type: %s <-> Opp tile: %s <-> Mov tile: %s", type.toString(), opponentTile.toString(), movementTile.toString());
+    }
 }

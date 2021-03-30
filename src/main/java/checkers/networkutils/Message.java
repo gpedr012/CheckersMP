@@ -17,6 +17,10 @@ public class Message {
 
     public static final String HAS_TURN_MSG = "hasTurn";
 
+    public static final String MATCH_WON = "matchWon";
+
+    public static final String MATCH_LOST = "matchLost";
+
     //syntax matchMove=id-row1-col1-row2-col2-row3-col3 where id is matchId and row & col position of movement.
     //row3 col3 may be empty if no enemy piece was eliminated.
     public static final String MATCH_MOVE_MSG = "matchMove=";
@@ -64,10 +68,15 @@ public class Message {
 
     }
 
-    public static String createMatchMoveMsg(int matchId, int row1, int col1, int row2, int col2) {
+    public static String createMatchMoveMsg(int matchId, int rowOrigin, int colOrigin, int rowDest, int colDest) {
 
-        return formatMessage(INTERNAL_SERVER_MSG_PREFIX, MATCH_MOVE_MSG + String.format("%d-%d-%d-%d-%d", matchId, row1, col1, row2, col2));
+        return formatMessage(INTERNAL_SERVER_MSG_PREFIX, MATCH_MOVE_MSG + String.format("%d-%d-%d-%d-%d", matchId, rowOrigin, colOrigin, rowDest, colDest));
 
+    }
+
+    public static String createMatchMoveMsg(int matchId, int rowOrigin, int colOrigin, int rowDest, int colDest, int enemyRow, int enemyCol) {
+
+        return formatMessage(INTERNAL_SERVER_MSG_PREFIX, MATCH_MOVE_MSG + String.format("%d-%d-%d-%d-%d-%d-%d", matchId, rowOrigin, colOrigin, rowDest, colDest, enemyRow, enemyCol));
     }
 
     public static String createHasTurnMsg() {

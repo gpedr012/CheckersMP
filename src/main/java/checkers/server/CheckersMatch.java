@@ -6,12 +6,15 @@ import io.netty.channel.Channel;
 
 public class CheckersMatch {
 
-    private Channel playerOne;
-    private Channel playerTwo;
+    private final Channel playerOne;
+    private final Channel playerTwo;
+    private final int playerOnePieceCtr;
+    private final int playerTwoPieceCtr;
 
     public CheckersMatch(Channel playerOne, Channel playerTwo) {
         this.playerOne = playerOne;
         this.playerTwo = playerTwo;
+        playerOnePieceCtr = playerTwoPieceCtr = 12;
     }
 
     public Channel getPlayerOne() {
@@ -32,7 +35,25 @@ public class CheckersMatch {
         String msg;
 
 
-        if(type == Action.Type.MOVE_ELIM) {
+        if (type == Action.Type.MOVE_ELIM) {
+
+//            if(initiator == playerOne) {
+//                playerTwoPieceCtr--;
+//                if(playerTwoPieceCtr == 0) {
+//                    playerOne.writeAndFlush();
+//                    playerTwo.writeAndFlush();
+//                    return;
+//                }
+//
+//            } else {
+//                playerOnePieceCtr--;
+//                if(playerOnePieceCtr == 0) {
+//                    playerOne.writeAndFlush();
+//                    playerTwo.writeAndFlush();
+//                    return;
+//                }
+//            }
+
             int enemyRow = args[Message.ROW_ELIM_IDX];
             int enemyCol = args[Message.COL_ELIM_IDX];
 
@@ -43,7 +64,7 @@ public class CheckersMatch {
             msg = Message.createMatchMoveMsg(0, rowOrigin, colOrigin, rowDest, colDest);
         }
 
-        if(initiator == playerOne) {
+        if (initiator == playerOne) {
             playerTwo.writeAndFlush(msg).sync();
 
         } else {

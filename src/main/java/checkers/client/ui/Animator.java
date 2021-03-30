@@ -9,7 +9,8 @@ import javafx.util.Duration;
 
 public class Animator {
 
-    private Animator() {}
+    private Animator() {
+    }
 
 //    public static void playMovementAnimation(Player player, Board board, Tile currentTile, Tile destinationTile)
 //    {
@@ -27,8 +28,7 @@ public class Animator {
 //
 //    }
 
-    public static void playMovementAnimation(Player player, Board board, Tile currentTile, Tile destinationTile)
-    {
+    public static void playMovementAnimation(Player player, Board board, Tile currentTile, Tile destinationTile) {
         Piece piece = currentTile.getPiece();
         Move moveBeingProcessed = piece.getPossibleMoves().findMove(destinationTile);
         EventHandler<ActionEvent> finishHandler = event -> finishAnimation(player, board, piece, moveBeingProcessed);
@@ -37,8 +37,7 @@ public class Animator {
 
     }
 
-    public static void playEnemyMovementAnimation(Board board, Tile currentTile, Tile destinationTile)
-    {
+    public static void playEnemyMovementAnimation(Board board, Tile currentTile, Tile destinationTile) {
         Piece piece = currentTile.getPiece();
         EventHandler<ActionEvent> finishHandler = event -> finishEnemyAnimation(board, piece, destinationTile);
         initAnimation(board, currentTile, destinationTile, finishHandler);
@@ -46,8 +45,7 @@ public class Animator {
 
     }
 
-    public static void playEnemyMovementAnimation(Board board, Tile currentTile, Tile destinationTile, Tile enemyTile)
-    {
+    public static void playEnemyMovementAnimation(Board board, Tile currentTile, Tile destinationTile, Tile enemyTile) {
         Piece piece = currentTile.getPiece();
         EventHandler<ActionEvent> finishHandler = event -> finishEnemyAnimation(board, piece, destinationTile, enemyTile);
         initAnimation(board, currentTile, destinationTile, finishHandler);
@@ -69,13 +67,10 @@ public class Animator {
     }
 
 
-
-    private static void finishAnimation(Player player, Board board, Piece piece, Move move)
-    {
+    private static void finishAnimation(Player player, Board board, Piece piece, Move move) {
         finishAnimCleanup(board, piece, move.getMovementTile());
 
-        if(piece.getPossibleMoves().getPriority() == MoveType.REQUIRED)
-        {
+        if (piece.getPossibleMoves().getPriority() == MoveType.REQUIRED) {
             move.getOpponentTile().eliminatePiece();
 
         }
@@ -84,8 +79,7 @@ public class Animator {
 
     }
 
-    private static void finishEnemyAnimation(Board board, Piece piece, Tile destination)
-    {
+    private static void finishEnemyAnimation(Board board, Piece piece, Tile destination) {
         finishAnimCleanup(board, piece, destination);
 
         OnlineGameManager.processPlayerTurn();
@@ -93,8 +87,7 @@ public class Animator {
 
     }
 
-    private static void finishEnemyAnimation(Board board, Piece piece, Tile destination, Tile enemyTile)
-    {
+    private static void finishEnemyAnimation(Board board, Piece piece, Tile destination, Tile enemyTile) {
         finishAnimCleanup(board, piece, destination);
 
         enemyTile.eliminatePiece();
@@ -113,14 +106,12 @@ public class Animator {
         piece.setCol(destination.getCol());
 
 
-        if((destination.getRow() == 0 || destination.getRow() == 7) && !piece.isCrowned())
+        if ((destination.getRow() == 0 || destination.getRow() == 7) && !piece.isCrowned())
             piece.setCrowned(true);
     }
 
 
-
-    private static TranslateTransition createTranslateTransition(Piece pieceToAnimate, Bounds currentPosition, Bounds destinationPosition)
-    {
+    private static TranslateTransition createTranslateTransition(Piece pieceToAnimate, Bounds currentPosition, Bounds destinationPosition) {
         TranslateTransition transition = new TranslateTransition(Duration.seconds(1.5), pieceToAnimate);
         double offset = Tile.SIDE_LENGTH / 2d;
 

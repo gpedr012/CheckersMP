@@ -29,7 +29,7 @@ public class MoveList {
     public void addAll(MoveList incomingList) {
         switch (priorityType) {
             case REQUIRED:
-                if(incomingList.priorityType == MoveType.REQUIRED) {
+                if (incomingList.priorityType == MoveType.REQUIRED) {
                     moves.addAll(incomingList.moves);
                 }
                 break;
@@ -38,7 +38,7 @@ public class MoveList {
                     moves.clear();
                     this.priorityType = MoveType.REQUIRED;
                 }
-                    moves.addAll(incomingList.moves);
+                moves.addAll(incomingList.moves);
 
                 break;
             case EMPTY:
@@ -77,8 +77,8 @@ public class MoveList {
     }
 
     public Move findMove(Tile tile) {
-        for (Move move: moves) {
-            if(move.getMovementTile() == tile) {
+        for (Move move : moves) {
+            if (move.getMovementTile() == tile) {
                 return move;
             }
         }

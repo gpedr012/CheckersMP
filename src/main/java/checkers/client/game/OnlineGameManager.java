@@ -6,13 +6,13 @@ import checkers.client.ui.Tile;
 import checkers.networkutils.Action;
 import checkers.networkutils.Message;
 
-public class OnlineGameManager
-{
+public class OnlineGameManager {
     private static Board board;
     private static Player player;
 
 
-    private OnlineGameManager () {}
+    private OnlineGameManager() {
+    }
 
 
     public static void processPlayerTurn() {
@@ -38,7 +38,7 @@ public class OnlineGameManager
         Tile currentTile = board.getTile(rowOrigin, colOrigin);
         Tile destinationTile = board.getTile(rowDest, colDest);
 
-        if(action.getType() == Action.Type.MOVE_ELIM) {
+        if (action.getType() == Action.Type.MOVE_ELIM) {
             int enemyRow = actionArgs[Message.ROW_ELIM_IDX];
             int enemyCol = actionArgs[Message.COL_ELIM_IDX];
 

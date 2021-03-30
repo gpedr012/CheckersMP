@@ -10,14 +10,12 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class ColorToggle extends StackPane
-{
+public class ColorToggle extends StackPane {
     Piece pieceBg;
     Rectangle bg = new Rectangle(60, 60);
     BooleanProperty isSelected = new SimpleBooleanProperty(false);
 
-    public ColorToggle(Piece.PieceColor color)
-    {
+    public ColorToggle(Piece.PieceColor color) {
 
 
         bg.setFill(Color.DARKGRAY);
@@ -29,13 +27,10 @@ public class ColorToggle extends StackPane
         pieceBg.setScaleY(0.75);
         getChildren().add(bg);
         getChildren().add(pieceBg);
-        setOnMouseClicked(new EventHandler<MouseEvent>()
-        {
+        setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(MouseEvent mouseEvent)
-            {
-                if(!isSelected.get())
-                {
+            public void handle(MouseEvent mouseEvent) {
+                if (!isSelected.get()) {
                     isSelected.set(true);
                     System.out.println("isSelected.get() = " + isSelected.get());
 
@@ -43,19 +38,14 @@ public class ColorToggle extends StackPane
             }
         });
 
-        isSelected.addListener(new ChangeListener<Boolean>()
-        {
+        isSelected.addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldV, Boolean newV)
-            {
-                if(newV)
-                {
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldV, Boolean newV) {
+                if (newV) {
                     pieceBg.setOpacity(100);
                     bg.setStroke(Color.WHITE);
 
-                }
-                else
-                {
+                } else {
                     pieceBg.setOpacity(50);
                     bg.setStroke(Color.DARKGRAY);
                 }
@@ -65,29 +55,18 @@ public class ColorToggle extends StackPane
         setId("sethover");
     }
 
-    public void setOtherToggle(ColorToggle otherToggle)
-    {
-        isSelectedProperty().addListener(new ChangeListener<Boolean>()
-        {
+    public void setOtherToggle(ColorToggle otherToggle) {
+        isSelectedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldV, Boolean newV)
-            {
-                if(newV)
-                {
-                    otherToggle.isSelectedProperty().set(false);
-                }
-                else
-                {
-                    otherToggle.isSelectedProperty().set(true);
-                }
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldV, Boolean newV) {
+                otherToggle.isSelectedProperty().set(!newV);
 
             }
         });
 
     }
 
-    public BooleanProperty isSelectedProperty()
-    {
+    public BooleanProperty isSelectedProperty() {
         return isSelected;
     }
 }
