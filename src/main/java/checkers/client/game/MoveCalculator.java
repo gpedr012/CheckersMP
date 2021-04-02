@@ -21,12 +21,6 @@ public class MoveCalculator {
 
     }
 
-    public void calculateAllMoves(List<Piece> pieces) {
-        for (Piece piece : pieces) {
-            piece.setPossibleMoves(getMoves(piece));
-        }
-    }
-
     public MoveList getMoves(Piece piece) {
 
         int currentRow = piece.getRow();
@@ -58,14 +52,14 @@ public class MoveCalculator {
         }
 
         if (validRowOrCol(currentCol + 1)) {
-            Move possibleMove = new Move(board.getTile(rowToCheck, currentCol + 1));
+            Move possibleMove = new Move(board.getTile(currentRow, currentCol), board.getTile(rowToCheck, currentCol + 1));
             assignType(possibleMove, rowModifier, 1);
             moveTypeStack.push(possibleMove);
 
 
         }
         if (validRowOrCol(currentCol - 1)) {
-            Move possibleMove = new Move(board.getTile(rowToCheck, currentCol - 1));
+            Move possibleMove = new Move(board.getTile(currentRow, currentCol), board.getTile(rowToCheck, currentCol - 1));
             assignType(possibleMove, rowModifier, -1);
             moveTypeStack.push(possibleMove);
         }

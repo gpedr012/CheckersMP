@@ -6,14 +6,20 @@ public class Move {
     private MoveType type;
     private Tile opponentTile;
     private Tile movementTile;
+    private Tile originalTile;
 
-    public Move(Tile movementTile) {
+    public Move(Tile originalTile, Tile movementTile) {
+        this.originalTile = originalTile;
         this.movementTile = movementTile;
 
     }
 
     public Tile getOpponentTile() {
         return opponentTile;
+    }
+
+    public void setOpponentTile(Tile opponentTile) {
+        this.opponentTile = opponentTile;
     }
 
     public Tile getMovementTile() {
@@ -24,9 +30,7 @@ public class Move {
         this.movementTile = movementTile;
     }
 
-    public void setOpponentTile(Tile opponentTile) {
-        this.opponentTile = opponentTile;
-    }
+    public Tile getOriginalTile() { return originalTile; }
 
     public MoveType getPriorityType() {
         return type;

@@ -2,12 +2,16 @@ package checkers.client.ui;
 
 import checkers.client.game.*;
 import javafx.animation.TranslateTransition;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Bounds;
 import javafx.util.Duration;
 
 public class Animator {
+
+    private static BooleanProperty isAnimating = new SimpleBooleanProperty(false);
 
     private Animator() {
     }
@@ -29,6 +33,8 @@ public class Animator {
 //    }
 
     public static void playMovementAnimation(Player player, Board board, Tile currentTile, Tile destinationTile) {
+        System.out.println("Animator.playMovementAnimation");
+        setIsAnimating(true);
         Piece piece = currentTile.getPiece();
         Move moveBeingProcessed = piece.getPossibleMoves().findMove(destinationTile);
         EventHandler<ActionEvent> finishHandler = event -> finishAnimation(player, board, piece, moveBeingProcessed);
@@ -75,7 +81,12 @@ public class Animator {
 
         }
 
+        board.addMoveToStack(move);
+        setIsAnimating(false);
+        System.out.println("Animator.finishAnimation");
         player.endTurn();
+
+
 
     }
 
@@ -125,4 +136,15 @@ public class Animator {
 
     }
 
+    public static boolean isAnimating() {
+        return isAnimating.get();
+    }
+
+    public static BooleanProperty isAnimatingProperty() {
+        return isAnimating;
+    }
+
+    public static void setIsAnimating(boolean value) {
+        isAnimating.set(value);
+    }
 }

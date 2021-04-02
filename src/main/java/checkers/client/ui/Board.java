@@ -1,19 +1,18 @@
 package checkers.client.ui;
 
+import checkers.client.game.Move;
 import checkers.client.game.Player;
 import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
-
-//TODO: Setup changes depending on whether 1 player plays or two.
-//If one player, always put player's pieces at the bottom of the board.
-//Otherwise if 2 players, black pieces always on the bottom and white pieces on the top.
+import java.util.Stack;
 
 public class Board extends GridPane {
     private final int NUM_ROWS = 8, NUM_COLS = 8;
 
     private final List<List<Tile>> tiles = new ArrayList<List<Tile>>(NUM_ROWS * NUM_COLS);
+    private Stack<Move> moveStack = new Stack<>();
 
 
     public Board() {
@@ -67,6 +66,19 @@ public class Board extends GridPane {
     @Override
     public String toString() {
         return Integer.toString(hashCode());
+    }
+
+    public void addMoveToStack(Move move) {
+        moveStack.push(move);
+
+    }
+
+    public Move popMove() {
+        return moveStack.pop();
+    }
+
+    public boolean isMoveStackEmpty() {
+        return moveStack.isEmpty();
     }
 
     public List<List<Tile>> getTiles() {

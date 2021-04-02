@@ -6,6 +6,13 @@
 
 }
 
+.undo-btn {
+    -fx-background-image: url("/undo.png");
+    -fx-background-position: center;
+    -fx-background-size: auto;
+    -fx-background-repeat: no-repeat;
+}
+
 
 .pane {
     -fx-background-image: url("/mainbg.jpg");

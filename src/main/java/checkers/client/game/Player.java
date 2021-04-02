@@ -18,7 +18,7 @@ public abstract class Player {
     private final Piece.PieceColor playerColor;
     private final int playerNumber;
     private final BooleanProperty hasTurn = new SimpleBooleanProperty(false);
-    protected ObjectProperty<Piece> selectedPiece = new SimpleObjectProperty<>();
+    private ObjectProperty<Piece> selectedPiece = new SimpleObjectProperty<>();
     protected List<Piece> piecesList;
     private final MoveCalculator moveCalculator;
     private final Board board;
@@ -126,6 +126,18 @@ public abstract class Player {
 
         }
 
+    }
+
+    public Piece getSelectedPiece() {
+        return selectedPiece.get();
+    }
+
+    public ObjectProperty<Piece> selectedPieceProperty() {
+        return selectedPiece;
+    }
+
+    public void setSelectedPiece(Piece selectedPiece) {
+        this.selectedPiece.set(selectedPiece);
     }
 
     @Override

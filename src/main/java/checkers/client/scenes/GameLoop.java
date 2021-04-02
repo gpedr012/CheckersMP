@@ -2,9 +2,11 @@ package checkers.client.scenes;
 
 
 import checkers.client.game.*;
+import checkers.client.ui.Animator;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
 import javafx.application.Application;
+import javafx.beans.binding.ObjectBinding;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -27,6 +29,7 @@ public class GameLoop extends Application {
     Board board;
     Stage stage;
     Pane boardContainer;
+    GameManager gameManager;
 
 
     public GameLoop() {
@@ -51,6 +54,7 @@ public class GameLoop extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         GameManager gameManager = new GameManager(board, player1, player2, this);
+        this.gameManager = gameManager;
         setUpStage(stage);
         gameManager.startGame();
 
@@ -98,8 +102,12 @@ public class GameLoop extends Application {
 
     public HBox getTopMenu() {
         HBox container = new HBox();
-        container.setAlignment(Pos.TOP_LEFT);
         Button homeBtn = new Button();
+        Button undoBtn = new Button();
+
+        container.setAlignment(Pos.TOP_LEFT);
+        container.setSpacing(10);
+
         homeBtn.setPrefSize(50, 50);
         homeBtn.getStyleClass().add("home-btn");
         homeBtn.setOnAction(e -> {
@@ -110,7 +118,25 @@ public class GameLoop extends Application {
             }
         });
 
-        container.getChildren().add(homeBtn);
+        undoBtn.disableProperty().bind(new ObjectBinding<>() {
+            {
+                super.bind(Animator.isAnimatingProperty());
+            }
+
+            @Override
+            protected Boolean computeValue() {
+                return Animator.isAnimating();
+            }
+        });
+
+        undoBtn.setOnAction(event -> {
+            gameManager.undoMove();
+        });
+
+        undoBtn.setPrefSize(50,50);
+        undoBtn.getStyleClass().add("undo-btn");
+
+        container.getChildren().addAll(homeBtn, undoBtn);
 
         return container;
     }

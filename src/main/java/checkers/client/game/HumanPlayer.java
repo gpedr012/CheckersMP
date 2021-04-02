@@ -42,7 +42,11 @@ public class HumanPlayer extends Player {
             piece.setHighLight(false, null);
 
         }
-        setHighLightTiles(false, selectedPiece.get());
+
+        if (getSelectedPiece() != null) {
+            setHighLightTiles(false, getSelectedPiece());
+        }
+
 
         if (ClientNetworkHelper.isInOnlineGame()) {
             ClientNetworkHelper.flushBufferToServer();
@@ -52,7 +56,7 @@ public class HumanPlayer extends Player {
     }
 
     private void initLogic() {
-        selectedPiece.addListener(new ChangeListener<Piece>() {
+        selectedPieceProperty().addListener(new ChangeListener<Piece>() {
             @Override
             public void changed(ObservableValue<? extends Piece> observableValue, Piece oldPiece, Piece newPiece) {
                 if (oldPiece != null) {
@@ -113,7 +117,7 @@ public class HumanPlayer extends Player {
             tileLogic = new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    Piece currentPiece = selectedPiece.get();
+                    Piece currentPiece = getSelectedPiece();
                     Tile currentTile = getBoard().getTile(currentPiece.getRow(), currentPiece.getCol());
                     Tile destinationTile = (Tile) mouseEvent.getSource();
 
@@ -153,7 +157,7 @@ public class HumanPlayer extends Player {
                 public void handle(MouseEvent mouseEvent) {
 
                     Piece clickedPiece = (Piece) mouseEvent.getSource();
-                    selectedPiece.setValue(clickedPiece);
+                    setSelectedPiece(clickedPiece);
                     clickedPiece.setHighLight(true, Color.GOLD);
                     setHighLightTiles(true, clickedPiece);
 
