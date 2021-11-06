@@ -1,20 +1,15 @@
 package checkers.client.ui;
 
-import checkers.client.game.Move;
 import checkers.client.game.MoveList;
 import javafx.animation.FadeTransition;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
-
-import java.util.Iterator;
 
 public class Piece extends StackPane {
 
@@ -156,8 +151,6 @@ public class Piece extends StackPane {
     }
 
     public void setHighLight(boolean value, Color color) {
-
-        System.out.println("Piece.setHighLight");
         selectionCircle.setOpacity(1);
         selectionCircle.setVisible(value);
         selectionCircle.setStroke(color);

@@ -42,10 +42,10 @@ public class MainMenu extends Application {
 
     private static final BooleanProperty isFindingMatch = new SimpleBooleanProperty(false);
 
-    private static final Label serverMessage = new Label();
+    private static Label serverMessage;
 
     static {
-        serverMessage.getStyleClass().add("server-info");
+
     }
 
     @Override
@@ -60,6 +60,8 @@ public class MainMenu extends Application {
     }
 
     public Scene setUpScene(SceneType sceneType) {
+        serverMessage = new Label();
+        serverMessage.getStyleClass().add("server-info");
         BorderPane root = getUISkeleton();
         Button defaultBtnOne = new Button();
         Button defaultBtnTwo = new Button();

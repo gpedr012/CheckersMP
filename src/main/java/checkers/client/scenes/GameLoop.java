@@ -2,6 +2,7 @@ package checkers.client.scenes;
 
 
 import checkers.client.game.*;
+import checkers.client.network.ClientNetworkHelper;
 import checkers.client.ui.Animator;
 import checkers.client.ui.Board;
 import checkers.client.ui.Piece;
@@ -130,10 +131,12 @@ public class GameLoop extends Application {
         });
 
         undoBtn.setOnAction(event -> {
-            gameManager.undoMove();
+            if (!ClientNetworkHelper.isInOnlineGame()) {
+                gameManager.undoMove();
+            }
         });
 
-        undoBtn.setPrefSize(50,50);
+        undoBtn.setPrefSize(50, 50);
         undoBtn.getStyleClass().add("undo-btn");
 
         container.getChildren().addAll(homeBtn, undoBtn);
@@ -143,7 +146,7 @@ public class GameLoop extends Application {
 
     private GridPane createEndDialog(String msg) {
         GridPane root = new GridPane();
-        root.getStylesheets().add("menustyle.css");
+        root.getStylesheets().add("/menustyle.css");
         root.setMaxHeight(stage.getHeight() / 4);
         root.setMaxWidth(stage.getWidth() / 2);
         root.setBackground(new Background(new BackgroundFill(Color.FIREBRICK, new CornerRadii(5), Insets.EMPTY)));
@@ -203,10 +206,6 @@ public class GameLoop extends Application {
 
         return player;
 
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 
 }
